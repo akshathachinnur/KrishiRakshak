@@ -1,0 +1,28 @@
+# Ignore Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore virtual environments
+backend/crop_model/venv/
+venv/
+.env/
+.venv/
+
+# Ignore datasets or large files
+*.csv
+*.tsv
+*.xls
+*.xlsx
+*.h5
+*.pkl
+*.joblib
+
+# Ignore IDE configs
+.vscode/
+.idea/
+
+backend/crop_model/env/
+frontend1/FarmerChatBot/node_modules/
+
