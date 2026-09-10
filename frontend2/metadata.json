@@ -1,0 +1,6 @@
+{
+  "name": "KrishiRakshak - Precision Bio-AI",
+  "description": "Smart farming assistant for Indian farmers: Instant leaf disease check, safe remedies, today's Mandi market rates, crop sowing advice, and government schemes.",
+  "requestFramePermissions": ["camera", "microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

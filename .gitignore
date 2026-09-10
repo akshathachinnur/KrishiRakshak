@@ -25,4 +25,6 @@ venv/
 
 backend/crop_model/env/
 frontend1/FarmerChatBot/node_modules/
+frontend2/node_modules/
+frontend2/.env
 
