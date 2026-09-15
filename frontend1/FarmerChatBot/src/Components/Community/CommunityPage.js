@@ -41,7 +41,7 @@ const posts = [
 
 export default function FarmerCommunityPage() {
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-8 mt-16">
+    <div className="min-h-screen bg-gray-50 px-4 md:px-8 pt-24 sm:pt-28 pb-16">
       <div className="max-w-2xl mx-auto space-y-6">
         {/* Create Post Box */}
         <div className="bg-white p-4 rounded-xl shadow-sm border flex items-center gap-4">

@@ -10,12 +10,12 @@ function Navbar() {
   const location = useLocation();
   const dropdownRef = useRef(null);
 
-  const { currentLang, changeLanguage, t, translations } = useLanguage();
+  const { currentLang, changeLanguage, translations } = useLanguage();
 
-  // Scroll effect
+  // Scroll effect for shadow and blur adjustment
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      setScrolled(window.scrollY > 15);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -31,6 +31,11 @@ function Navbar() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setOpen(false);
+  }, [location.pathname]);
 
   // Language options
   const languageList = [
@@ -52,153 +57,180 @@ function Navbar() {
 
   return (
     <header
-      className={`w-full fixed top-0 left-0 z-50 transition-all duration-500 ${
-        scrolled ? "shadow-xl" : ""
+      className={`w-full fixed top-0 left-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? "bg-white/95 backdrop-blur-md shadow-sm py-1.5 border-b border-gray-200/70"
+          : "bg-white/85 backdrop-blur-sm shadow-2xs py-2 border-b border-gray-100/80"
       }`}
     >
-      <nav
-        className={`flex items-center justify-between px-6 md:px-12 py-4 rounded-b-2xl border 
-          transition-all duration-500
-          ${
-            scrolled
-              ? "bg-white/90 backdrop-blur-md border-gray-200/50"
-              : "bg-white/80 backdrop-blur-sm border-gray-200/30"
-          }`}
-      >
-        {/* Logo */}
-        <Link to="/" className="flex items-center gap-2">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-600 to-lime-400 flex items-center justify-center text-white font-black text-lg shadow-md">
-            🌿
-          </div>
-          <span className="text-2xl font-black bg-gradient-to-r from-emerald-800 to-emerald-600 bg-clip-text text-transparent">
-            KrishiRakshak
-          </span>
-        </Link>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <nav className="flex items-center justify-between gap-3">
+          {/* Logo & Brand */}
+          <Link
+            to="/"
+            className="flex items-center gap-2 flex-shrink-0 group transition-transform duration-200 hover:scale-[1.01]"
+          >
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-emerald-600 via-emerald-500 to-lime-400 flex items-center justify-center text-white font-bold text-base shadow-xs group-hover:shadow-emerald-300/40">
+              🌿
+            </div>
+            <span className="text-lg sm:text-xl font-extrabold bg-gradient-to-r from-emerald-800 via-emerald-700 to-emerald-600 bg-clip-text text-transparent tracking-tight">
+              KrishiRakshak
+            </span>
+          </Link>
 
-        {/* Desktop Menu */}
-        <ul className="hidden md:flex items-center gap-7 text-gray-700 font-medium text-sm">
-          {menuLinks.map(({ path, name }) => (
-            <li key={path}>
-              <Link
-                to={path}
-                className={`relative transition-colors duration-300 
-                  after:block after:h-[2px] after:w-0 after:bg-emerald-600 
-                  after:transition-all after:duration-300 hover:after:w-full 
-                  after:absolute after:-bottom-1 after:left-0
-                  ${
-                    location.pathname === path
-                      ? "text-emerald-600 after:w-full font-bold"
-                      : "hover:text-emerald-600"
-                  }`}
+          {/* Desktop Navigation Links */}
+          <ul className="hidden lg:flex items-center gap-4 xl:gap-6 text-gray-700 text-xs font-semibold">
+            {menuLinks.map(({ path, name }) => {
+              const isActive = location.pathname === path;
+              return (
+                <li key={path}>
+                  <Link
+                    to={path}
+                    className={`relative py-1 px-0.5 transition-colors duration-200 tracking-wide
+                      after:block after:h-[2px] after:bg-emerald-600 after:transition-all after:duration-300 
+                      after:absolute after:bottom-0 after:left-0
+                      ${
+                        isActive
+                          ? "text-emerald-700 font-bold after:w-full"
+                          : "text-gray-600 hover:text-emerald-600 after:w-0 hover:after:w-full"
+                      }`}
+                  >
+                    {name}
+                  </Link>
+                </li>
+              );
+            })}
+
+            {/* Languages Dropdown */}
+            <li className="relative" ref={dropdownRef}>
+              <button
+                type="button"
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[11px] font-semibold transition-all duration-200 shadow-2xs ${
+                  dropdownOpen
+                    ? "border-emerald-500 bg-emerald-50 text-emerald-800 ring-2 ring-emerald-200/50"
+                    : "border-gray-200 hover:border-emerald-400 text-gray-700 bg-white hover:bg-emerald-50/40"
+                }`}
+                aria-expanded={dropdownOpen}
               >
-                {name}
-              </Link>
-            </li>
-          ))}
+                <Globe size={13} className="text-emerald-600" />
+                <span>{translations[currentLang]?.name || "Language"}</span>
+                <ChevronDown
+                  size={12}
+                  className={`transition-transform duration-200 ${
+                    dropdownOpen ? "rotate-180 text-emerald-600" : "text-gray-400"
+                  }`}
+                />
+              </button>
 
-          {/* Languages Dropdown */}
-          <li className="relative" ref={dropdownRef}>
-            <button
-              onClick={() => setDropdownOpen(!dropdownOpen)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all duration-300 ${
-                dropdownOpen
-                  ? "border-emerald-500 bg-emerald-50 text-emerald-700 font-bold"
-                  : "border-gray-200 hover:border-emerald-400 text-gray-700 bg-white"
+              {dropdownOpen && (
+                <ul className="absolute left-0 mt-1.5 w-48 bg-white border border-gray-100 rounded-xl shadow-xl py-1.5 z-50 animate-fadeIn text-xs">
+                  <div className="px-3 py-1 text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                    Select Language / भाषा
+                  </div>
+                  {languageList.map(({ key, name }) => (
+                    <li key={key}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          changeLanguage(key);
+                          setDropdownOpen(false);
+                        }}
+                        className={`w-full flex items-center justify-between px-3.5 py-1.5 text-xs font-medium text-left transition ${
+                          currentLang === key
+                            ? "bg-emerald-50 text-emerald-800 font-bold"
+                            : "text-gray-700 hover:bg-emerald-50/60"
+                        }`}
+                      >
+                        <span>{name}</span>
+                        {currentLang === key && (
+                          <Check size={13} className="text-emerald-600" />
+                        )}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          </ul>
+
+          {/* Right Side CTA Buttons & Profile */}
+          <div className="hidden lg:flex items-center gap-2 xl:gap-2.5 flex-shrink-0">
+            <Link
+              to="/PredictionIndex"
+              className={`px-3 py-1 text-xs font-semibold rounded-full text-white shadow-2xs hover:shadow-xs transition-all duration-200 transform hover:-translate-y-0.5 whitespace-nowrap ${
+                location.pathname === "/PredictionIndex"
+                  ? "bg-emerald-700 ring-2 ring-emerald-300"
+                  : "bg-emerald-600 hover:bg-emerald-700"
               }`}
             >
-              <Globe size={15} className="text-emerald-600" />
-              <span>{translations[currentLang]?.name || "Language"}</span>
-              <ChevronDown size={14} />
+              Disease Predict
+            </Link>
+
+            <Link
+              to="/FertilizerForm"
+              className={`px-3 py-1 text-xs font-semibold rounded-full text-white shadow-2xs hover:shadow-xs transition-all duration-200 transform hover:-translate-y-0.5 whitespace-nowrap ${
+                location.pathname === "/FertilizerForm"
+                  ? "bg-emerald-700 ring-2 ring-emerald-300"
+                  : "bg-emerald-600 hover:bg-emerald-700"
+              }`}
+            >
+              Fertilization
+            </Link>
+
+            <Link
+              to="/RecommendIndex"
+              className={`px-3 py-1 text-xs font-semibold rounded-full text-white shadow-2xs hover:shadow-xs transition-all duration-200 transform hover:-translate-y-0.5 whitespace-nowrap ${
+                location.pathname === "/RecommendIndex"
+                  ? "bg-emerald-700 ring-2 ring-emerald-300"
+                  : "bg-emerald-600 hover:bg-emerald-700"
+              }`}
+            >
+              Recommend
+            </Link>
+
+            <Link
+              to="/profile"
+              className="w-7 h-7 rounded-full flex items-center justify-center bg-gray-100 hover:bg-emerald-50 text-gray-700 hover:text-emerald-700 border border-gray-200/60 hover:border-emerald-300 transition-colors shadow-2xs"
+              title="Farmer Profile"
+            >
+              <User size={15} />
+            </Link>
+          </div>
+
+          {/* Mobile Menu Trigger */}
+          <div className="flex items-center gap-1.5 lg:hidden">
+            <Link
+              to="/profile"
+              className="w-7 h-7 rounded-full flex items-center justify-center bg-gray-100 text-gray-700 border border-gray-200"
+            >
+              <User size={15} />
+            </Link>
+            <button
+              type="button"
+              onClick={() => setOpen(!open)}
+              className="p-1.5 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-400"
+              aria-label="Toggle Navigation Menu"
+            >
+              {open ? <X size={20} /> : <Menu size={20} />}
             </button>
+          </div>
+        </nav>
+      </div>
 
-            {dropdownOpen && (
-              <ul className="absolute left-0 mt-2 w-48 bg-white border border-gray-100 rounded-2xl shadow-xl py-2 z-50 animate-fadeIn">
-                <div className="px-3 py-1 text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-                  Select Language / भाषा
-                </div>
-                {languageList.map(({ key, name }) => (
-                  <li key={key}>
-                    <button
-                      onClick={() => {
-                        changeLanguage(key);
-                        setDropdownOpen(false);
-                      }}
-                      className={`w-full flex items-center justify-between px-4 py-2.5 text-sm text-left transition ${
-                        currentLang === key
-                          ? "bg-emerald-50 text-emerald-800 font-bold"
-                          : "text-gray-700 hover:bg-emerald-50/60"
-                      }`}
-                    >
-                      <span>{name}</span>
-                      {currentLang === key && (
-                        <Check size={16} className="text-emerald-600" />
-                      )}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </li>
-        </ul>
-
-        {/* Right Side: Disease Predict + Fertilization Form + Recommend + Profile */}
-        <div className="hidden md:flex items-center gap-3">
-          <Link
-            to="/PredictionIndex"
-            className="px-4 py-2 text-sm font-semibold rounded-full 
-              bg-gradient-to-r from-purple-400 to-indigo-400 hover:from-purple-500 hover:to-indigo-500 
-              text-white shadow-md transition-all duration-300 transform hover:-translate-y-0.5"
-          >
-            Disease Predict
-          </Link>
-
-          <Link
-            to="/FertilizerForm"
-            className="px-4 py-2 text-sm font-semibold rounded-full 
-              bg-gradient-to-r from-sky-400 to-blue-500 hover:from-sky-500 hover:to-blue-600 
-              text-white shadow-md transition-all duration-300 transform hover:-translate-y-0.5"
-          >
-            Fertilization
-          </Link>
-
-          <Link
-            to="/RecommendIndex"
-            className="px-5 py-2 text-sm font-semibold rounded-full 
-              bg-gradient-to-r from-emerald-500 to-lime-500 hover:from-emerald-600 hover:to-lime-600 
-              text-white shadow-md transition-all duration-300 transform hover:-translate-y-0.5"
-          >
-            Recommend
-          </Link>
-          <Link to="/profile" className="p-2 rounded-full hover:bg-green-100 transition">
-            <User size={24} className="text-gray-800" />
-          </Link>
-        </div>
-
-        {/* Mobile Menu Button */}
-        <button
-          onClick={() => setOpen(!open)}
-          className="md:hidden flex items-center text-gray-800 p-1"
-        >
-          {open ? <X size={28} /> : <Menu size={28} />}
-        </button>
-      </nav>
-
-      {/* Mobile Dropdown */}
+      {/* Mobile Drawer */}
       {open && (
-        <div
-          className="md:hidden absolute top-[72px] left-0 w-full bg-white/95 backdrop-blur-md border-t border-gray-200 
-            shadow-xl px-6 py-6 animate-fadeIn"
-        >
-          <ul className="flex flex-col gap-5 text-gray-700 text-base font-medium">
+        <div className="lg:hidden w-full bg-white/95 backdrop-blur-lg border-t border-gray-200 shadow-2xl px-5 py-6 animate-fadeIn">
+          <ul className="flex flex-col gap-4 text-gray-700 text-sm font-medium">
             {menuLinks.map(({ path, name }) => (
               <li key={path}>
                 <Link
                   to={path}
                   onClick={() => setOpen(false)}
-                  className={`${
+                  className={`block px-3 py-2 rounded-xl font-semibold transition ${
                     location.pathname === path
-                      ? "text-emerald-600 font-bold"
-                      : "hover:text-emerald-600"
+                      ? "bg-emerald-50 text-emerald-700 font-bold"
+                      : "hover:bg-gray-50 text-gray-700"
                   }`}
                 >
                   {name}
@@ -206,21 +238,24 @@ function Navbar() {
               </li>
             ))}
 
-            {/* Language options in mobile */}
-            <li className="pt-2 border-t border-gray-100">
-              <span className="font-bold text-gray-800 text-sm">Select Language / भाषा</span>
-              <div className="grid grid-cols-2 gap-2 mt-2">
+            {/* Mobile Language Selector */}
+            <li className="pt-3 border-t border-gray-100">
+              <span className="block px-3 text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                Select Language / भाषा
+              </span>
+              <div className="grid grid-cols-2 gap-2">
                 {languageList.map(({ key, name }) => (
                   <button
                     key={key}
+                    type="button"
                     onClick={() => {
                       changeLanguage(key);
                       setOpen(false);
                     }}
-                    className={`px-3 py-2 text-xs rounded-xl border text-left flex items-center justify-between ${
+                    className={`px-3 py-2 text-xs rounded-xl border text-left flex items-center justify-between transition ${
                       currentLang === key
-                        ? "bg-emerald-100 border-emerald-500 text-emerald-900 font-bold"
-                        : "bg-gray-50 border-gray-200 text-gray-700"
+                        ? "bg-emerald-50 border-emerald-500 text-emerald-800 font-bold shadow-xs"
+                        : "bg-gray-50 border-gray-200 text-gray-700 hover:bg-emerald-50/40"
                     }`}
                   >
                     <span>{name}</span>
@@ -230,29 +265,26 @@ function Navbar() {
               </div>
             </li>
 
-            {/* Action Buttons in Mobile */}
-            <li className="flex flex-col gap-2 pt-2">
+            {/* Mobile Action Buttons */}
+            <li className="flex flex-col gap-2.5 pt-3 border-t border-gray-100">
               <Link
                 to="/PredictionIndex"
                 onClick={() => setOpen(false)}
-                className="px-4 py-2.5 text-sm font-semibold rounded-xl 
-                  bg-gradient-to-r from-purple-500 to-indigo-500 text-white shadow text-center"
+                className="px-4 py-2.5 text-sm font-semibold rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm text-center"
               >
                 Disease Predict
               </Link>
               <Link
                 to="/FertilizerForm"
                 onClick={() => setOpen(false)}
-                className="px-4 py-2.5 text-sm font-semibold rounded-xl 
-                  bg-gradient-to-r from-sky-500 to-blue-500 text-white shadow text-center"
+                className="px-4 py-2.5 text-sm font-semibold rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm text-center"
               >
                 Fertilization
               </Link>
               <Link
                 to="/RecommendIndex"
                 onClick={() => setOpen(false)}
-                className="px-4 py-2.5 text-sm font-semibold rounded-xl 
-                  bg-gradient-to-r from-emerald-500 to-lime-500 text-white shadow text-center"
+                className="px-4 py-2.5 text-sm font-semibold rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm text-center"
               >
                 Recommend
               </Link>

@@ -203,7 +203,7 @@ export default function BlogCardDemo() {
   ];
 
   return (
-    <div className="mx-auto max-w-6xl p-4 mt-20">
+    <div className="mx-auto max-w-6xl px-4 pt-24 sm:pt-28 pb-16">
       <h2 className="mb-4 text-2xl font-bold">Latest from the Farm Blog</h2>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {posts.map((p) => (

@@ -114,7 +114,7 @@ const StateMarketView = () => {
   };
   
   return (
-    <div className="min-h-screen bg-gray-100 py-10 px-5 mt-16">
+    <div className="min-h-screen bg-gray-100 pt-24 sm:pt-28 pb-16 px-5">
       <div className="max-w-7xl mx-auto">
         <header className="text-center mb-8">
           <h1 className="text-3xl md:text-5xl font-bold text-gray-800 mb-3">

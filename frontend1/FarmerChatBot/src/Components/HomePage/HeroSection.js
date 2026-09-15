@@ -26,7 +26,7 @@ function HeroSection() {
       </div>
 
       {/* Main Hero Container - Centered / High Impact */}
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-12 pt-12 pb-16 flex-grow flex items-center">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-12 pt-20 sm:pt-24 lg:pt-28 pb-14 flex-grow flex items-center">
         <div className="max-w-3xl text-white space-y-7">
           
           {/* Trust Badge */}
