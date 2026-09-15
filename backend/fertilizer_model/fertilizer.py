@@ -1,5 +1,7 @@
 # fertilizer.py
+import sys
 import os
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 import joblib
 import pandas as pd
 import google.generativeai as genai
@@ -25,9 +27,9 @@ try:
     if not API_KEY:
         raise ValueError("GOOGLE_API_KEY not found in .env file.")
     genai.configure(api_key=API_KEY)
-    print("✅ Google Generative AI configured successfully.")
+    print("[OK] Google Generative AI configured successfully.")
 except Exception as e:
-    print(f"🚨 Configuration Error: {e}")
+    print(f"[ERROR] Configuration Error: {e}")
     exit()
 
 generation_config = {
@@ -50,9 +52,9 @@ try:
     le_path = os.path.join(BASE_DIR, "label_encoder.pkl")
     PIPELINE = joblib.load(pipeline_path)
     LABEL_ENCODER = joblib.load(le_path)
-    print("✅ ML models ('fertilizer_pipeline.pkl', 'label_encoder.pkl') loaded successfully!")
+    print("[OK] ML models ('fertilizer_pipeline.pkl', 'label_encoder.pkl') loaded successfully!")
 except Exception as e:
-    print(f"❌ CRITICAL ERROR: Failed to load ML models. Error: {e}")
+    print(f"[CRITICAL ERROR] Failed to load ML models. Error: {e}")
     exit()
 
 # --------------------------------------------------------------------------
@@ -130,7 +132,7 @@ async def recommend_fertilizer(data: FertilizerInput):
             input_dict = data.dict()
             fertilizer_name = await run_in_threadpool(run_prediction, input_dict)
 
-            initial_response = {"fertilizer_name": fertilizer_name, "description": "🧠 Generating expert advice..."}
+            initial_response = {"fertilizer_name": fertilizer_name, "description": "Generating expert advice..."}
             yield f"{json.dumps(initial_response)}\n"
 
             text_prompt = (
@@ -162,6 +164,6 @@ async def recommend_fertilizer(data: FertilizerInput):
 
 if __name__ == "__main__":
     import uvicorn
-    print("🚀 Starting FastAPI server on port 8001...")
+    print("[START] Starting FastAPI server on port 8001...")
     # 🚨 CORRECTED: The port is now 8001
     uvicorn.run("fertilizer:app", host="127.0.0.1", port=8001, reload=True)
