@@ -1,0 +1,441 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    color-scheme: dark;
+  }
+
+  html.light {
+    color-scheme: light;
+  }
+
+  body {
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  h1, h2, h3, h4, h5, h6, .font-space {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+  }
+}
+
+/* -------------------------------------------------------------
+   LIGHT MODE THEME SYSTEM
+   Vibrant, high-contrast, colorful agricultural daylight theme.
+   All text is guaranteed 100% visible, crisp, and high-contrast (WCAG AAA).
+   Uses attribute selectors [class*="..."] to prevent CSS minifier stripping.
+------------------------------------------------------------- */
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) {
+  color-scheme: light !important;
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) body {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) #root {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+/* Universal Light Mode Typography Hierarchy */
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) h1,
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) h2,
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) h3,
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) h4,
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) h5,
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) h6 {
+  color: #0f172a !important;
+  font-weight: 700;
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) p {
+  color: #334155 !important;
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) strong,
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) b {
+  color: #0f172a !important;
+}
+
+/* High-Contrast Crisp Typography Overrides */
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) .text-\[\#dae5dc\],
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="dae5dc"] {
+  color: #0f172a !important; /* Jet deep slate black for absolute clarity */
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) .text-\[\#bccbb6\],
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="bccbb6"] {
+  color: #334155 !important; /* Dark slate gray for descriptions, high contrast */
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) .text-\[\#869582\],
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="869582"] {
+  color: #475569 !important; /* Medium-dark slate for labels and telemetry */
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="3d4a3b"] {
+  color: #94a3b8 !important; /* Subtle slate divider */
+}
+
+/* Accent text colors in light mode (Rich, readable shades) */
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) .text-\[\#5bf06c\],
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) .text-\[\#83da84\],
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="text-[#5bf06c]"],
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="text-[#83da84]"] {
+  color: #047857 !important; /* Lush vibrant emerald green */
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) .text-\[\#39d353\],
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="text-[#39d353]"] {
+  color: #16a34a !important; /* Vibrant crop leaf green */
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) .text-\[\#ffb4ab\],
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="text-[#ffb4ab]"] {
+  color: #dc2626 !important; /* Vivid ruby red for alerts and blight */
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) .text-\[\#ffcb87\],
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="text-[#ffcb87]"] {
+  color: #b45309 !important; /* Rich golden bronze for warnings/hotline */
+}
+
+/* SVG Lucide Icon Stroke / Color Overrides in Light Mode */
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) svg[class*="text-[#dae5dc]"] {
+  color: #0f172a !important;
+  stroke: #0f172a !important;
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) svg[class*="text-[#bccbb6]"] {
+  color: #334155 !important;
+  stroke: #334155 !important;
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) svg[class*="text-[#5bf06c]"] {
+  color: #047857 !important;
+  stroke: #047857 !important;
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) svg[class*="text-[#ffcb87]"] {
+  color: #b45309 !important;
+  stroke: #b45309 !important;
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) svg[class*="text-[#ffb4ab]"] {
+  color: #dc2626 !important;
+  stroke: #dc2626 !important;
+}
+
+/* Surface & Card Background Overrides (Attribute Selectors) */
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="bg-[#0c1510]"],
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="bg-[#07100b]"] {
+  background-color: #f8fafc !important;
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="bg-[#141e18]"],
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="bg-[#18221c]"] {
+  background-color: #ffffff !important;
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.08) !important;
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="bg-[#1d2720]"],
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="bg-[#222c26]"] {
+  background-color: #f1f5f9 !important;
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="bg-[#2d3731]"] {
+  background-color: #e2e8f0 !important;
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="bg-[#323b35]"] {
+  background-color: #eff6ff !important; /* Soft sky blue badge */
+  color: #1d4ed8 !important;
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="bg-[#18261e]"],
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="bg-[#142319]"],
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="bg-[#121c16]"] {
+  background-color: #f0fdf4 !important;
+}
+
+/* 24/7 Helpline Banner Gradient in Light Mode */
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="from-[#142319]"] {
+  background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 50%, #f7fee7 100%) !important;
+  border-color: #a7f3d0 !important;
+  box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.12) !important;
+}
+
+/* Translucent Background Overrides */
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="bg-[#0c1510]/80"],
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="bg-[#0c1510]/85"] {
+  background-color: rgba(248, 250, 252, 0.94) !important;
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="bg-[#0c1510]/90"],
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="bg-[#0c1510]/95"] {
+  background-color: rgba(255, 255, 255, 0.96) !important;
+  box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.1) !important;
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="bg-[#07100b]/80"] {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="bg-[#141e18]/80"],
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="bg-[#141e18]/90"],
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="bg-[#141e18]/95"],
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="bg-[#18221c]/80"] {
+  background-color: rgba(255, 255, 255, 0.96) !important;
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="bg-[#222c26]/80"] {
+  background-color: rgba(241, 245, 249, 0.95) !important;
+}
+
+/* Vibrant Primary Action Buttons (Emerald Gradient + Bold White Text) */
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) button.bg-\[\#5bf06c\],
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) button.bg-\[\#39d353\],
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) a.bg-\[\#5bf06c\],
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) a.bg-\[\#39d353\],
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) button[class~="bg-[#5bf06c]"],
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) button[class~="bg-[#39d353]"],
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) a[class~="bg-[#5bf06c]"],
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) a[class~="bg-[#39d353]"] {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 16px 0 rgba(16, 185, 129, 0.35) !important;
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) button[class~="bg-[#5bf06c]"] > span,
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) button[class~="bg-[#39d353]"] > span,
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) a[class~="bg-[#5bf06c]"] > span,
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) a[class~="bg-[#39d353]"] > span,
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) button[class~="bg-[#5bf06c]"] [class*="text-[#00390c]"],
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) button[class~="bg-[#39d353]"] [class*="text-[#00390c]"] {
+  color: #ffffff !important;
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) button[class~="bg-[#5bf06c]"]:hover,
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) button[class~="bg-[#39d353]"]:hover,
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) a[class~="bg-[#5bf06c]"]:hover,
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) a[class~="bg-[#39d353]"]:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+  box-shadow: 0 6px 20px 0 rgba(16, 185, 129, 0.45) !important;
+}
+
+/* Secondary Action Buttons (White Card + Vibrant Emerald Border) */
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) button[class*="bg-[#222c26]"],
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) a[class*="bg-[#222c26]"] {
+  background-color: #ffffff !important;
+  border: 1.5px solid #10b981 !important;
+  color: #047857 !important;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.12) !important;
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) button[class*="bg-[#222c26]"]:hover,
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) a[class*="bg-[#222c26]"]:hover {
+  background-color: #ecfdf5 !important;
+  border-color: #059669 !important;
+  color: #064e3b !important;
+}
+
+/* Neutral Buttons & Interactive Items in Light Mode */
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) button[class*="bg-[#18221c]"]:not([class*="bg-[#5bf06c]"]):not([class*="bg-[#93000a]"]):not([class*="bg-[#39d353]"]),
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) a[class*="bg-[#18221c]"]:not([class*="bg-[#5bf06c]"]):not([class*="bg-[#93000a]"]):not([class*="bg-[#39d353]"]) {
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+  border-color: #cbd5e1 !important;
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) button[class*="bg-[#141e18]"]:not([class*="bg-[#5bf06c]"]):not([class*="bg-[#93000a]"]):not([class*="bg-[#39d353]"]),
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) a[class*="bg-[#141e18]"]:not([class*="bg-[#5bf06c]"]):not([class*="bg-[#93000a]"]):not([class*="bg-[#39d353]"]) {
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+  border-color: #cbd5e1 !important;
+}
+
+/* Vibrant Colorful Badge Chips */
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="bg-[#5bf06c]/10"],
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="bg-[#5bf06c]/15"],
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="bg-[#5bf06c]/20"] {
+  background-color: #d1fae5 !important;
+  color: #065f46 !important;
+  border-color: #86efac !important;
+  font-weight: 600;
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="bg-[#ffb4ab]/10"],
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="bg-[#ffb4ab]/15"],
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="bg-[#ffb4ab]/20"],
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="bg-[#93000a]"] {
+  background-color: #fee2e2 !important;
+  color: #991b1b !important;
+  border-color: #fca5a5 !important;
+  font-weight: 600;
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="bg-[#ffcb87]/10"],
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="bg-[#ffcb87]/15"],
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="bg-[#ffcb87]/20"] {
+  background-color: #fef3c7 !important;
+  color: #92400e !important;
+  border-color: #fcd34d !important;
+  font-weight: 600;
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="bg-[#39d353]/20"] {
+  background-color: #dcfce7 !important;
+  color: #15803d !important;
+  border-color: #86efac !important;
+}
+
+/* Border Color Overrides */
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="border-[#222c26]"],
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="border-[#18221c]"] {
+  border-color: #e2e8f0 !important;
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="border-[#2d3731]"] {
+  border-color: #cbd5e1 !important;
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="border-[#3d4a3b]"],
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="border-[#3d4f40]"],
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="border-[#344439]"] {
+  border-color: #94a3b8 !important;
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="border-[#5bf06c]/30"],
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="border-[#5bf06c]/40"] {
+  border-color: #10b981 !important;
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="border-[#ffb4ab]/30"] {
+  border-color: #f87171 !important;
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="border-[#ffcb87]/30"] {
+  border-color: #fbbf24 !important;
+}
+
+/* Hover States in Light Mode */
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="hover:bg-[#222c26]"]:hover {
+  background-color: #f1f5f9 !important;
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="hover:bg-[#18221c]"]:hover {
+  background-color: #f8fafc !important;
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) [class*="hover:bg-[#2d3731]"]:hover {
+  background-color: #e2e8f0 !important;
+}
+
+/* Header Elevation in Light Mode */
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) header {
+  background-color: rgba(255, 255, 255, 0.96) !important;
+  border-bottom: 1.5px solid #e2e8f0 !important;
+  box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.05) !important;
+}
+
+/* Light Mode Input & Form Controls */
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) input[type="text"],
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) input[type="number"],
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) textarea,
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) select {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+  font-weight: 500;
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) input::placeholder,
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) textarea::placeholder {
+  color: #64748b !important;
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) input[type="range"] {
+  accent-color: #059669 !important;
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) select option {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+}
+
+/* Modal Backdrops & Overlays */
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) .bg-black\/75,
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) .bg-black\/70,
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) .bg-black\/60 {
+  background-color: rgba(15, 23, 42, 0.5) !important;
+  backdrop-blur: 8px !important;
+}
+
+/* Telemetry & Circular Gauges */
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) svg circle[stroke="#222c26"] {
+  stroke: #e2e8f0 !important;
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) svg circle[stroke="#ffb4ab"] {
+  stroke: #ef4444 !important;
+}
+
+/* Telemetry HUD in Hero Overlay */
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) .group .rounded-3xl {
+  box-shadow: 0 20px 45px -10px rgba(15, 23, 42, 0.15) !important;
+  border-color: #cbd5e1 !important;
+}
+
+/* Light Mode Scrollbars */
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) ::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) ::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+}
+
+:is(html.light, html[data-theme="light"], body.light, .light, [data-theme="light"]) ::-webkit-scrollbar-thumb:hover {
+  background: #059669;
+}
+
+@keyframes scan {
+  0% {
+    top: 2%;
+    opacity: 0.6;
+  }
+  50% {
+    top: 95%;
+    opacity: 1;
+  }
+  100% {
+    top: 2%;
+    opacity: 0.6;
+  }
+}
+
+.animate-scan-line {
+  animation: scan 2.8s ease-in-out infinite;
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0c1510;
+}
+::-webkit-scrollbar-thumb {
+  background: #222c26;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #39d353;
+}
+
