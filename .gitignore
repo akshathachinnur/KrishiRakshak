@@ -28,6 +28,7 @@ backend/crop_model/env/
 # Ignore IDE configs
 .vscode/
 .idea/
+*.code-workspace
 
 # Ignore frontend dependencies and build outputs
 node_modules/
