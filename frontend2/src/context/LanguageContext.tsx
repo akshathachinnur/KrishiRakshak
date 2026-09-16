@@ -26,6 +26,11 @@ export interface Translations {
     signIn: string;
     signOut: string;
     kisanCallCenter: string;
+    fertilizerAdvisor?: string;
+    community?: string;
+    blogs?: string;
+    marketTracker?: string;
+    agroWeather?: string;
   };
   hero: {
     tickerAccurate: string;

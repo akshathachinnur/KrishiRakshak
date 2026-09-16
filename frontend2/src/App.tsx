@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Header } from './components/Header';
-import { HeroSection } from './components/HeroSection';
-import { ProblemAndPipeline } from './components/ProblemAndPipeline';
+import { FarmerDashboard } from './components/FarmerDashboard';
 import { PathologyScanner } from './components/PathologyScanner';
-import { CropRecommendationML } from './components/CropRecommendationML';
-import { AgriTelemetryAndMandi } from './components/AgriTelemetryAndMandi';
+import { CropAndFertilizerHub } from './components/CropAndFertilizerHub';
+import { MandiAndWeatherHub } from './components/MandiAndWeatherHub';
 import { FarmerChatBot } from './components/FarmerChatBot';
 import { FarmerSchemesAndHelp } from './components/FarmerSchemesAndHelp';
 import { FarmRecordsVault } from './components/FarmRecordsVault';
+import { FarmerCommunity } from './components/FarmerCommunity';
+import { AgriBlogs } from './components/AgriBlogs';
 import { AuthModal } from './components/AuthModal';
 import { Footer } from './components/Footer';
 import { auth, subscribeToDiagnoses, subscribeToCropPlans } from './lib/firebase';
@@ -98,12 +99,17 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleNavigate = (tab: string) => {
+    setActiveTab(tab);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-[#f8fafc] text-[#0f172a] dark:bg-[#0c1510] dark:text-[#dae5dc] transition-colors duration-200">
       {/* Top Navigation */}
       <Header
         activeTab={activeTab}
-        setActiveTab={setActiveTab}
+        setActiveTab={handleNavigate}
         currentUser={currentUser}
         onOpenAuth={() => setIsAuthModalOpen(true)}
         selectedDialect={selectedDialect}
@@ -111,46 +117,21 @@ export default function App() {
         diagnosesCount={diagnoses.length}
       />
 
-      {/* Main Views Container */}
+      {/* Main Content Area */}
       <main className="flex-1 pt-16">
-        {/* Full Platform Overview Screen */}
+        {/* 1. Farmer Home Dashboard */}
         {activeTab === 'overview' && (
-          <div>
-            <HeroSection
-              onLaunchDiagnostic={() => {
-                setActiveTab('scanner');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              onSimulateML={() => {
-                setActiveTab('crop-ml');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-            />
-            <ProblemAndPipeline />
-            <PathologyScanner
-              currentUser={currentUser}
-              onOpenAuth={() => setIsAuthModalOpen(true)}
+          <div className="pt-2 pb-12">
+            <FarmerDashboard
               selectedDialect={selectedDialect}
-              setSelectedDialect={setSelectedDialect}
-              onDiagnosisSaved={() => {}}
-            />
-            <CropRecommendationML
-              currentUser={currentUser}
+              onNavigate={handleNavigate}
               onOpenAuth={() => setIsAuthModalOpen(true)}
-              onAskKisanAI={handleAskKisanAI}
+              currentUser={currentUser}
             />
-            <AgriTelemetryAndMandi />
-            <FarmerChatBot
-              selectedDialect={selectedDialect}
-              setSelectedDialect={setSelectedDialect}
-              soilContext={currentSoilContext}
-              diagnosedDiseaseContext={currentDiseaseContext}
-            />
-            <FarmerSchemesAndHelp />
           </div>
         )}
 
-        {/* Dedicated Pathology Vision Screen */}
+        {/* 2. Leaf Doctor (Pathology Vision) */}
         {activeTab === 'scanner' && (
           <div className="pt-4 pb-12">
             <PathologyScanner
@@ -158,30 +139,33 @@ export default function App() {
               onOpenAuth={() => setIsAuthModalOpen(true)}
               selectedDialect={selectedDialect}
               setSelectedDialect={setSelectedDialect}
-              onDiagnosisSaved={() => setActiveTab('vault')}
+              onDiagnosisSaved={() => handleNavigate('vault')}
             />
           </div>
         )}
 
-        {/* Dedicated Agronomic ML Screen */}
-        {activeTab === 'crop-ml' && (
+        {/* 3. Crop & Fertilizer Unified Hub */}
+        {activeTab === 'crop-fertilizer' && (
           <div className="pt-4 pb-12">
-            <CropRecommendationML
+            <CropAndFertilizerHub
               currentUser={currentUser}
               onOpenAuth={() => setIsAuthModalOpen(true)}
               onAskKisanAI={handleAskKisanAI}
+              selectedDialect={selectedDialect}
             />
           </div>
         )}
 
-        {/* Dedicated Telemetry Suite Screen */}
-        {activeTab === 'telemetry' && (
+        {/* 4. Mandi & Weather Unified Hub */}
+        {activeTab === 'mandi-weather' && (
           <div className="pt-4 pb-12">
-            <AgriTelemetryAndMandi />
+            <MandiAndWeatherHub
+              selectedDialect={selectedDialect}
+            />
           </div>
         )}
 
-        {/* Dedicated Kisan AI Chatbot Screen */}
+        {/* 5. Kisan AI Voice & Chatbot */}
         {activeTab === 'chatbot' && (
           <div className="pt-4 pb-12">
             <FarmerChatBot
@@ -193,14 +177,28 @@ export default function App() {
           </div>
         )}
 
-        {/* Dedicated Farmer Schemes & Help Screen */}
+        {/* 6. Farmer Chaupal (Peer Community) */}
+        {activeTab === 'community' && (
+          <div className="pt-4 pb-12">
+            <FarmerCommunity />
+          </div>
+        )}
+
+        {/* 7. Agri Advisory Blogs */}
+        {activeTab === 'blogs' && (
+          <div className="pt-4 pb-12">
+            <AgriBlogs />
+          </div>
+        )}
+
+        {/* 8. Government Schemes & Subsidies */}
         {activeTab === 'schemes' && (
           <div className="pt-4 pb-12">
             <FarmerSchemesAndHelp />
           </div>
         )}
 
-        {/* Dedicated Farm Vault Screen (Real-Time Firestore Sync) */}
+        {/* 9. Farm Vault (Digital Diary) */}
         {activeTab === 'vault' && (
           <div className="pt-4 pb-12">
             <FarmRecordsVault
@@ -208,7 +206,7 @@ export default function App() {
               diagnoses={diagnoses}
               cropPlans={cropPlans}
               onOpenAuth={() => setIsAuthModalOpen(true)}
-              onNavigateToScanner={() => setActiveTab('scanner')}
+              onNavigateToScanner={() => handleNavigate('scanner')}
             />
           </div>
         )}

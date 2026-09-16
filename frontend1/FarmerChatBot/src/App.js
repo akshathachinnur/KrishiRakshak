@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import './App.css';
+import LandingPage from './Components/LandingPage/LandingPage';
 import HomeIndex from './Components/HomePage/HomeIndex';
 import CommunityIndex from './Components/Community/CommunityIndex';
 import BlogsIndex from './Components/Blogs/BlogsIndex';
@@ -15,7 +16,8 @@ function App() {
   return (
     <div className="App" style={{ fontFamily: 'Poppins, sans-serif' }}>
       <Routes>
-        <Route path="/" element={<HomeIndex />} />
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/home-classic" element={<HomeIndex />} />
         <Route path="/CommunityIndex" element={<CommunityIndex />} />
         <Route path="/BlogsIndex" element={<BlogsIndex />} />
         <Route path="/RecommendIndex" element={<RecommendIndex />} />

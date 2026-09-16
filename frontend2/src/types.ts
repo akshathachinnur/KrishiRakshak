@@ -102,3 +102,82 @@ export interface MandiItem {
   change: number;
   trend: 'up' | 'down' | 'neutral';
 }
+
+export interface FertilizerInput {
+  temperature: number;
+  humidity: number;
+  moisture: number;
+  soil_type: string;
+  crop_type: string;
+  n: number;
+  p: number;
+  k: number;
+}
+
+export interface FertilizerResult {
+  fertilizer_name: string;
+  description: string;
+}
+
+export interface BlogPost {
+  id: string;
+  title: string;
+  excerpt: string;
+  cover: string;
+  category: string;
+  author: {
+    name: string;
+    avatar?: string;
+  };
+  date: string;
+  minutes: number;
+  tags: string[];
+  content?: string;
+}
+
+export interface CommunityPost {
+  id: string;
+  author: string;
+  avatarType: 'tractor' | 'sprout' | 'wheat';
+  time: string;
+  content: string;
+  image?: string;
+  likes: number;
+  comments: number;
+  topic?: string;
+  replies?: Array<{
+    id: string;
+    author: string;
+    time: string;
+    text: string;
+    isExpert?: boolean;
+  }>;
+}
+
+export interface StateMarketPrice {
+  state: string;
+  avgPricePerKg: number;
+  avgPricePerQuintal: number;
+  latestDate: string;
+  minPrice?: number;
+  maxPrice?: number;
+}
+
+export interface WeatherForecastDay {
+  date: string;
+  dayName: string;
+  temp: number;
+  maxTemp: number;
+  minTemp: number;
+  weather: {
+    main: string;
+    description: string;
+    icon?: string;
+  };
+  humidity: number;
+  windSpeed: number;
+  totalRain: number;
+  advisories: string[];
+  isSuitableForSpraying: boolean;
+}
+

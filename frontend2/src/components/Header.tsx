@@ -1,5 +1,21 @@
-import React from 'react';
-import { User, LogOut, Sun, Moon, Globe } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import {
+  User,
+  LogOut,
+  Sun,
+  Moon,
+  Globe,
+  ChevronDown,
+  Users,
+  BookOpen,
+  Landmark,
+  FolderLock,
+  Sprout,
+  Camera,
+  Store,
+  MessageSquare,
+  Sparkles
+} from 'lucide-react';
 import { logOutUser } from '../lib/firebase';
 import { useTheme } from '../context/ThemeContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -26,25 +42,88 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   const { theme, toggleTheme } = useTheme();
   const { language, setLanguage, t, supportedLanguages } = useLanguage();
+  const [isMoreOpen, setIsMoreOpen] = useState(false);
+  const moreMenuRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (moreMenuRef.current && !moreMenuRef.current.contains(e.target as Node)) {
+        setIsMoreOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleLanguageChange = (newLang: AppLanguage) => {
     setLanguage(newLang);
     setSelectedDialect(newLang);
   };
 
-  const navItems = [
-    { id: 'overview', label: t.nav.home },
-    { id: 'scanner', label: t.nav.leafDoctor },
-    { id: 'crop-ml', label: t.nav.cropAdvisor },
-    { id: 'telemetry', label: t.nav.mandiWeather },
-    { id: 'chatbot', label: t.nav.askKisanAI },
-    { id: 'schemes', label: t.nav.schemes },
-    { id: 'vault', label: t.nav.vault, badge: diagnosesCount > 0 ? diagnosesCount : undefined },
+  // 5 Farmer-Friendly Primary Tabs
+  const mainNavItems = [
+    {
+      id: 'overview',
+      label: selectedDialect === 'hi' ? 'होम' : selectedDialect === 'mr' ? 'होम' : 'Home',
+      icon: '🏠',
+    },
+    {
+      id: 'scanner',
+      label: selectedDialect === 'hi' ? 'पत्ती डॉक्टर' : selectedDialect === 'mr' ? 'पान डॉक्टर' : 'Leaf Doctor',
+      icon: '🌿',
+    },
+    {
+      id: 'crop-fertilizer',
+      label: selectedDialect === 'hi' ? 'फसल व खाद' : selectedDialect === 'mr' ? 'पीक व खत' : 'Crop & Fertilizer',
+      icon: '🌱',
+    },
+    {
+      id: 'mandi-weather',
+      label: selectedDialect === 'hi' ? 'मंडी व मौसम' : selectedDialect === 'mr' ? 'बाजार व हवामान' : 'Mandi & Weather',
+      icon: '💰',
+    },
+    {
+      id: 'chatbot',
+      label: selectedDialect === 'hi' ? 'किसान साथी AI' : selectedDialect === 'mr' ? 'किसान AI' : 'Ask Kisan AI',
+      icon: '🎙️',
+    },
   ];
 
+  // Secondary Features in "More Services" Dropdown
+  const moreServices = [
+    {
+      id: 'community',
+      label: selectedDialect === 'hi' ? 'किसान चौपाल' : selectedDialect === 'mr' ? 'शेतकरी मंच' : 'Farmer Forum',
+      sub: selectedDialect === 'hi' ? 'किसान चर्चा व सवाल' : 'Peer Discussion',
+      icon: Users,
+    },
+    {
+      id: 'blogs',
+      label: selectedDialect === 'hi' ? 'कृषि सलाह लेख' : selectedDialect === 'mr' ? 'कृषी लेख' : 'Agri Blogs',
+      sub: selectedDialect === 'hi' ? 'देसी तरीके व उपाय' : 'Field Knowledge',
+      icon: BookOpen,
+    },
+    {
+      id: 'schemes',
+      label: selectedDialect === 'hi' ? 'सरकारी योजनाएं' : selectedDialect === 'mr' ? 'सरकारी योजना' : 'Govt Schemes',
+      sub: 'PM-Kisan, KCC, Fasal Bima',
+      icon: Landmark,
+    },
+    {
+      id: 'vault',
+      label: selectedDialect === 'hi' ? 'मेरी खेत डायरी' : selectedDialect === 'mr' ? 'शेत डायरी' : 'Farm Vault',
+      sub: selectedDialect === 'hi' ? 'पुराने रिकॉर्ड व पर्चे' : 'Saved Records',
+      icon: FolderLock,
+      badge: diagnosesCount > 0 ? diagnosesCount : undefined,
+    },
+  ];
+
+  const isMoreTabActive = moreServices.some((s) => s.id === activeTab);
+
   return (
-    <header className="fixed top-0 w-full z-40 bg-white/95 text-slate-900 border-b border-slate-200 shadow-sm dark:bg-[#0c1510]/90 dark:text-[#dae5dc] dark:border-[#222c26] backdrop-blur-xl transition-colors">
-      <div className="h-16 max-w-7xl mx-auto px-3 sm:px-6 lg:px-10 flex items-center justify-between gap-2">
+    <header className="fixed top-0 w-full z-40 bg-white/95 text-slate-900 border-b border-slate-200 shadow-sm dark:bg-[#0c1510]/95 dark:text-[#dae5dc] dark:border-[#222c26] backdrop-blur-xl transition-colors">
+      <div className="h-16 max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 flex items-center justify-between gap-2">
         {/* Brand Logo & Tag */}
         <div 
           onClick={() => setActiveTab('overview')}
@@ -56,38 +135,87 @@ export const Header: React.FC<HeaderProps> = ({
             src="https://lh3.googleusercontent.com/aida/AEtjO1X3NLjsN4hPWJcRgYI7-FL3W-SBk_iWWZ1rlKEIsPMMCt4JJQi0Rugsbx8JmUqyRpv7-q2Dh0LTfRnCfoZrKGV3PGVO4cHxNpgdTEsk56384uk1vmMMwr7NvhEl799nkEKEbNnDAVri44bD9UbRYGczgC2o7mGtG-IkWjAuElipZxDj9vszwCCG0F2VLw4aYwR_Sa8ooJNQ0KmpFib9LLR9arPDu9Cvrq02-_tzSrDx12bp8WmMakNNUZo"
           />
           <div className="flex flex-col">
-            <span className="font-space text-base sm:text-lg font-bold text-slate-900 dark:text-[#dae5dc] tracking-tight leading-none">
+            <span className="font-space text-base sm:text-lg font-black text-slate-900 dark:text-[#dae5dc] tracking-tight leading-none">
               KrishiRakshak
             </span>
-            <span className="font-space text-[9px] sm:text-[10px] uppercase tracking-wider text-emerald-700 dark:text-[#5bf06c] font-semibold mt-0.5">
-              Kisan Smart Companion
+            <span className="font-space text-[9px] sm:text-[10px] uppercase tracking-wider text-emerald-700 dark:text-[#5bf06c] font-bold mt-0.5">
+              🌾 किसान साथी
             </span>
           </div>
         </div>
 
-        {/* Navigation Tabs (Desktop) */}
-        <nav className="hidden xl:flex items-center gap-5" aria-label="Main Navigation">
-          {navItems.map((item) => (
+        {/* Simplified 5 Primary Tabs (Desktop) */}
+        <nav className="hidden lg:flex items-center gap-2 xl:gap-3" aria-label="Main Navigation">
+          {mainNavItems.map((item) => (
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id)}
-              className={`text-xs lg:text-sm font-medium transition-all relative py-1 flex items-center gap-1.5 ${
+              className={`text-xs xl:text-sm font-bold transition-all relative py-1.5 px-3 rounded-xl flex items-center gap-1.5 cursor-pointer ${
                 activeTab === item.id
-                  ? 'text-emerald-700 dark:text-[#5bf06c] font-bold'
-                  : 'text-slate-600 hover:text-slate-900 dark:text-[#bccbb6] dark:hover:text-[#dae5dc]'
+                  ? 'bg-emerald-100 text-emerald-900 dark:bg-emerald-950 dark:text-[#5bf06c] shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-[#bccbb6] dark:hover:text-[#dae5dc] dark:hover:bg-[#18221c]'
               }`}
             >
+              <span>{item.icon}</span>
               <span>{item.label}</span>
-              {item.badge !== undefined && (
-                <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-emerald-100 text-emerald-800 font-bold border border-emerald-300 dark:bg-[#39d353]/20 dark:text-[#5bf06c] dark:border-[#5bf06c]/30">
-                  {item.badge}
-                </span>
-              )}
-              {activeTab === item.id && (
-                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-emerald-600 dark:bg-[#5bf06c] rounded-full"></span>
-              )}
             </button>
           ))}
+
+          {/* "More Services" Dropdown */}
+          <div className="relative" ref={moreMenuRef}>
+            <button
+              type="button"
+              onClick={() => setIsMoreOpen(!isMoreOpen)}
+              className={`text-xs xl:text-sm font-bold transition-all py-1.5 px-3 rounded-xl flex items-center gap-1.5 cursor-pointer ${
+                isMoreTabActive
+                  ? 'bg-emerald-100 text-emerald-900 dark:bg-emerald-950 dark:text-[#5bf06c] shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-[#bccbb6] dark:hover:text-[#dae5dc] dark:hover:bg-[#18221c]'
+              }`}
+            >
+              <span>✨</span>
+              <span>{selectedDialect === 'hi' ? 'और सेवाएं' : selectedDialect === 'mr' ? 'अधिक सेवा' : 'More Tools'}</span>
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isMoreOpen ? 'rotate-180' : ''}`} />
+            </button>
+
+            {isMoreOpen && (
+              <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-[#121c16] rounded-2xl shadow-xl border border-slate-200 dark:border-[#222c26] p-2 z-50 animate-in fade-in zoom-in-95 duration-150">
+                {moreServices.map((srv) => {
+                  const Icon = srv.icon;
+                  const isActive = activeTab === srv.id;
+                  return (
+                    <button
+                      key={srv.id}
+                      type="button"
+                      onClick={() => {
+                        setActiveTab(srv.id);
+                        setIsMoreOpen(false);
+                      }}
+                      className={`w-full text-left p-2.5 rounded-xl flex items-center justify-between transition cursor-pointer ${
+                        isActive
+                          ? 'bg-emerald-50 dark:bg-[#18241d] text-emerald-800 dark:text-emerald-400'
+                          : 'hover:bg-slate-50 dark:hover:bg-[#18221c] text-slate-700 dark:text-slate-200'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 flex items-center justify-center shrink-0">
+                          <Icon className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <span className="font-bold text-xs block leading-tight">{srv.label}</span>
+                          <span className="text-[10px] text-slate-400 block">{srv.sub}</span>
+                        </div>
+                      </div>
+                      {srv.badge && (
+                        <span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-600 text-white">
+                          {srv.badge}
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </nav>
 
         {/* Right Controls */}
@@ -177,25 +305,35 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
 
       {/* Mobile navigation bar */}
-      <div className="xl:hidden flex items-center justify-start gap-1 px-2 py-1.5 border-t border-slate-200 bg-white/95 text-slate-800 dark:border-[#222c26] dark:bg-[#0c1510]/95 overflow-x-auto no-scrollbar shadow-sm">
-        {navItems.map((item) => (
+      <div className="lg:hidden flex items-center justify-around gap-1 px-2 py-2 border-t border-slate-200 bg-white/95 text-slate-800 dark:border-[#222c26] dark:bg-[#0c1510]/95 shadow-sm">
+        {mainNavItems.map((item) => (
           <button
             key={item.id}
             onClick={() => setActiveTab(item.id)}
-            className={`text-xs px-2.5 py-1 rounded-lg whitespace-nowrap transition-colors flex items-center gap-1 shrink-0 ${
+            className={`text-xs px-2 py-1 rounded-xl whitespace-nowrap transition-colors flex flex-col items-center gap-0.5 shrink-0 ${
               activeTab === item.id
-                ? 'bg-emerald-100 text-emerald-800 font-bold border border-emerald-300 dark:bg-[#5bf06c]/20 dark:text-[#5bf06c] dark:border-[#5bf06c]/30'
-                : 'text-slate-600 hover:text-slate-900 dark:text-[#bccbb6] dark:hover:text-[#dae5dc]'
+                ? 'text-emerald-700 dark:text-[#5bf06c] font-black'
+                : 'text-slate-500 hover:text-slate-900 dark:text-[#bccbb6]'
             }`}
           >
-            <span>{item.label}</span>
-            {item.badge !== undefined && (
-              <span className="w-4 h-4 rounded-full bg-emerald-600 text-white dark:bg-[#5bf06c] dark:text-[#00390c] text-[10px] font-bold flex items-center justify-center">
-                {item.badge}
-              </span>
-            )}
+            <span className="text-base leading-none">{item.icon}</span>
+            <span className="text-[10px] font-bold">{item.label}</span>
           </button>
         ))}
+        <button
+          type="button"
+          onClick={() => setActiveTab(isMoreTabActive ? 'overview' : 'community')}
+          className={`text-xs px-2 py-1 rounded-xl whitespace-nowrap transition-colors flex flex-col items-center gap-0.5 shrink-0 ${
+            isMoreTabActive
+              ? 'text-emerald-700 dark:text-[#5bf06c] font-black'
+              : 'text-slate-500 hover:text-slate-900 dark:text-[#bccbb6]'
+          }`}
+        >
+          <span className="text-base leading-none">✨</span>
+          <span className="text-[10px] font-bold">
+            {selectedDialect === 'hi' ? 'अन्य' : 'More'}
+          </span>
+        </button>
       </div>
     </header>
   );
