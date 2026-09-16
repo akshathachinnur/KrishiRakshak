@@ -52,15 +52,21 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, currentUs
         </button>
 
         <div className="flex flex-col gap-2">
-          <div className="inline-flex items-center gap-2 text-[#5bf06c] text-xs font-bold uppercase tracking-wider">
-            <ShieldCheck className="w-4 h-4" />
-            <span>Secure Agri-ID Authentication</span>
+          <div className="flex items-center gap-3 mb-1">
+            <img src="/logo-icon.png" alt="KrishiRakshak" className="w-10 h-10 object-contain drop-shadow" />
+            <div className="flex flex-col">
+              <span className="text-xs font-bold text-[#5bf06c] uppercase tracking-wider flex items-center gap-1.5">
+                <ShieldCheck className="w-3.5 h-3.5" />
+                KrishiRakshak Agri-ID
+              </span>
+              <span className="text-[11px] text-[#869582]">Precision Bio-AI Platform</span>
+            </div>
           </div>
           <h3 className="text-2xl font-bold text-[#dae5dc] tracking-tight">
             {currentUser ? 'Farmer Bio-ID Profile' : 'Access Field Vault'}
           </h3>
           <p className="text-sm text-[#bccbb6]">
-            Synchronize your crop disease telemetry, leaf diagnostic history, and soil formulations in real-time across your mobile and tractor devices.
+            Synchronize your crop disease telemetry, plant diagnostic history, and soil formulations in real-time across your mobile and tractor devices.
           </p>
         </div>
 

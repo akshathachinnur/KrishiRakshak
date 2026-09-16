@@ -34,15 +34,15 @@ export const CropAndFertilizerHub: React.FC<CropAndFertilizerHubProps> = ({
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
       {/* Sub Tab Switcher Header */}
-      <div className="bg-white dark:bg-[#121c16] rounded-3xl border border-slate-200 dark:border-[#222c26] p-2 sm:p-3 shadow-sm mb-6 max-w-xl mx-auto">
+      <div className="bg-white dark:bg-[#0a180f] rounded-3xl border border-slate-200 dark:border-[#1b3d26] p-2 sm:p-3 shadow-sm mb-6 max-w-xl mx-auto">
         <div className="grid grid-cols-2 gap-2">
           <button
             type="button"
             onClick={() => setSubTab('crop')}
             className={`py-3 px-4 rounded-2xl font-black text-xs sm:text-sm flex items-center justify-center gap-2 transition-all cursor-pointer ${
               subTab === 'crop'
-                ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/25'
-                : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                ? 'bg-gradient-to-r from-[#18552c] to-[#256d36] text-white shadow-md shadow-emerald-900/40 border border-emerald-500/40'
+                : 'text-slate-600 dark:text-emerald-100/75 hover:bg-slate-100 dark:hover:bg-[#122b1a]'
             }`}
           >
             <Sprout className="w-4 h-4" />
@@ -56,8 +56,8 @@ export const CropAndFertilizerHub: React.FC<CropAndFertilizerHubProps> = ({
             onClick={() => setSubTab('fertilizer')}
             className={`py-3 px-4 rounded-2xl font-black text-xs sm:text-sm flex items-center justify-center gap-2 transition-all cursor-pointer ${
               subTab === 'fertilizer'
-                ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/25'
-                : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                ? 'bg-gradient-to-r from-[#18552c] to-[#256d36] text-white shadow-md shadow-emerald-900/40 border border-emerald-500/40'
+                : 'text-slate-600 dark:text-emerald-100/75 hover:bg-slate-100 dark:hover:bg-[#122b1a]'
             }`}
           >
             <FlaskConical className="w-4 h-4" />

@@ -11,8 +11,8 @@ export const Footer: React.FC = () => {
             <div className="flex items-center gap-3">
               <img
                 alt="KrishiRakshak Brand Logo"
-                className="h-7 w-auto object-contain"
-                src="https://lh3.googleusercontent.com/aida/AEtjO1X3NLjsN4hPWJcRgYI7-FL3W-SBk_iWWZ1rlKEIsPMMCt4JJQi0Rugsbx8JmUqyRpv7-q2Dh0LTfRnCfoZrKGV3PGVO4cHxNpgdTEsk56384uk1vmMMwr7NvhEl799nkEKEbNnDAVri44bD9UbRYGczgC2o7mGtG-IkWjAuElipZxDj9vszwCCG0F2VLw4aYwR_Sa8ooJNQ0KmpFib9LLR9arPDu9Cvrq02-_tzSrDx12bp8WmMakNNUZo"
+                className="h-8 w-auto object-contain"
+                src="/logo-icon.png"
               />
               <span className="font-space text-base font-bold text-[#dae5dc]">
                 KrishiRakshak • Precision Bio-AI

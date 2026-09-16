@@ -10,11 +10,9 @@ import {
   BookOpen,
   Landmark,
   FolderLock,
-  Sprout,
-  Camera,
-  Store,
-  MessageSquare,
-  Sparkles
+  PhoneCall,
+  Sparkles,
+  ShieldCheck
 } from 'lucide-react';
 import { logOutUser } from '../lib/firebase';
 import { useTheme } from '../context/ThemeContext';
@@ -61,7 +59,7 @@ export const Header: React.FC<HeaderProps> = ({
     setSelectedDialect(newLang);
   };
 
-  // 5 Farmer-Friendly Primary Tabs
+  // Primary Tabs
   const mainNavItems = [
     {
       id: 'overview',
@@ -70,7 +68,7 @@ export const Header: React.FC<HeaderProps> = ({
     },
     {
       id: 'scanner',
-      label: selectedDialect === 'hi' ? 'पत्ती डॉक्टर' : selectedDialect === 'mr' ? 'पान डॉक्टर' : 'Leaf Doctor',
+      label: selectedDialect === 'hi' ? 'पौधा डॉक्टर' : selectedDialect === 'mr' ? 'रोप डॉक्टर' : 'Plant Doctor',
       icon: '🌿',
     },
     {
@@ -122,214 +120,283 @@ export const Header: React.FC<HeaderProps> = ({
   const isMoreTabActive = moreServices.some((s) => s.id === activeTab);
 
   return (
-    <header className="fixed top-0 w-full z-40 bg-white/95 text-slate-900 border-b border-slate-200 shadow-sm dark:bg-[#0c1510]/95 dark:text-[#dae5dc] dark:border-[#222c26] backdrop-blur-xl transition-colors">
-      <div className="h-16 max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 flex items-center justify-between gap-2">
-        {/* Brand Logo & Tag */}
-        <div 
-          onClick={() => setActiveTab('overview')}
-          className="flex items-center gap-2.5 cursor-pointer select-none shrink-0"
-        >
-          <img
-            alt="KrishiRakshak Brand Logo"
-            className="h-8 w-auto object-contain"
-            src="https://lh3.googleusercontent.com/aida/AEtjO1X3NLjsN4hPWJcRgYI7-FL3W-SBk_iWWZ1rlKEIsPMMCt4JJQi0Rugsbx8JmUqyRpv7-q2Dh0LTfRnCfoZrKGV3PGVO4cHxNpgdTEsk56384uk1vmMMwr7NvhEl799nkEKEbNnDAVri44bD9UbRYGczgC2o7mGtG-IkWjAuElipZxDj9vszwCCG0F2VLw4aYwR_Sa8ooJNQ0KmpFib9LLR9arPDu9Cvrq02-_tzSrDx12bp8WmMakNNUZo"
-          />
-          <div className="flex flex-col">
-            <span className="font-space text-base sm:text-lg font-black text-slate-900 dark:text-[#dae5dc] tracking-tight leading-none">
-              KrishiRakshak
-            </span>
-            <span className="font-space text-[9px] sm:text-[10px] uppercase tracking-wider text-emerald-700 dark:text-[#5bf06c] font-bold mt-0.5">
-              🌾 किसान साथी
-            </span>
-          </div>
-        </div>
-
-        {/* Simplified 5 Primary Tabs (Desktop) */}
-        <nav className="hidden lg:flex items-center gap-2 xl:gap-3" aria-label="Main Navigation">
-          {mainNavItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => setActiveTab(item.id)}
-              className={`text-xs xl:text-sm font-bold transition-all relative py-1.5 px-3 rounded-xl flex items-center gap-1.5 cursor-pointer ${
-                activeTab === item.id
-                  ? 'bg-emerald-100 text-emerald-900 dark:bg-emerald-950 dark:text-[#5bf06c] shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-[#bccbb6] dark:hover:text-[#dae5dc] dark:hover:bg-[#18221c]'
-              }`}
+    <header className="fixed top-0 w-full z-40 shadow-md transition-colors">
+      {/* 1. Official PMFBY Green Utility Strip */}
+      <div className="w-full bg-[#1e6b37] text-white text-[11px] sm:text-xs py-1.5 px-3 sm:px-6 lg:px-8 border-b border-[#18552c]">
+        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+          {/* Left: WhatsApp & Helpline Information */}
+          <div className="flex items-center gap-2.5 sm:gap-4 flex-wrap">
+            <a 
+              href="https://wa.me/917065514447" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 hover:text-emerald-200 transition-colors font-semibold"
             >
-              <span>{item.icon}</span>
-              <span>{item.label}</span>
-            </button>
-          ))}
-
-          {/* "More Services" Dropdown */}
-          <div className="relative" ref={moreMenuRef}>
-            <button
-              type="button"
-              onClick={() => setIsMoreOpen(!isMoreOpen)}
-              className={`text-xs xl:text-sm font-bold transition-all py-1.5 px-3 rounded-xl flex items-center gap-1.5 cursor-pointer ${
-                isMoreTabActive
-                  ? 'bg-emerald-100 text-emerald-900 dark:bg-emerald-950 dark:text-[#5bf06c] shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-[#bccbb6] dark:hover:text-[#dae5dc] dark:hover:bg-[#18221c]'
-              }`}
+              <span className="w-4 h-4 rounded-full bg-[#25D366] text-white flex items-center justify-center text-[10px] font-bold shadow-xs">💬</span>
+              <span>WhatsApp ChatBot - <strong className="text-[#a7f3d0]">7065514447</strong></span>
+            </a>
+            <span className="hidden sm:inline text-emerald-400/60">|</span>
+            <a 
+              href="tel:14447" 
+              className="flex items-center gap-1.5 hover:text-emerald-200 transition-colors font-medium"
             >
-              <span>✨</span>
-              <span>{selectedDialect === 'hi' ? 'और सेवाएं' : selectedDialect === 'mr' ? 'अधिक सेवा' : 'More Tools'}</span>
-              <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isMoreOpen ? 'rotate-180' : ''}`} />
-            </button>
-
-            {isMoreOpen && (
-              <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-[#121c16] rounded-2xl shadow-xl border border-slate-200 dark:border-[#222c26] p-2 z-50 animate-in fade-in zoom-in-95 duration-150">
-                {moreServices.map((srv) => {
-                  const Icon = srv.icon;
-                  const isActive = activeTab === srv.id;
-                  return (
-                    <button
-                      key={srv.id}
-                      type="button"
-                      onClick={() => {
-                        setActiveTab(srv.id);
-                        setIsMoreOpen(false);
-                      }}
-                      className={`w-full text-left p-2.5 rounded-xl flex items-center justify-between transition cursor-pointer ${
-                        isActive
-                          ? 'bg-emerald-50 dark:bg-[#18241d] text-emerald-800 dark:text-emerald-400'
-                          : 'hover:bg-slate-50 dark:hover:bg-[#18221c] text-slate-700 dark:text-slate-200'
-                      }`}
-                    >
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 flex items-center justify-center shrink-0">
-                          <Icon className="w-4 h-4" />
-                        </div>
-                        <div>
-                          <span className="font-bold text-xs block leading-tight">{srv.label}</span>
-                          <span className="text-[10px] text-slate-400 block">{srv.sub}</span>
-                        </div>
-                      </div>
-                      {srv.badge && (
-                        <span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-600 text-white">
-                          {srv.badge}
-                        </span>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        </nav>
-
-        {/* Right Controls */}
-        <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
-          {/* Main Website Language Selector (6 Languages) */}
-          <div 
-            id="website-language-selector"
-            className="flex items-center gap-1.5 bg-white border border-slate-300 hover:border-emerald-500 text-slate-800 dark:bg-[#18221c] dark:border-[#344439] dark:hover:border-[#5bf06c]/60 dark:text-[#dae5dc] px-2 sm:px-2.5 py-1 rounded-xl text-xs transition-colors shadow-sm"
-          >
-            <Globe className="w-3.5 h-3.5 text-emerald-700 dark:text-[#5bf06c] shrink-0" />
-            <select
-              value={language}
-              onChange={(e) => handleLanguageChange(e.target.value as AppLanguage)}
-              aria-label="Select Website Language"
-              className="bg-transparent text-emerald-800 dark:text-[#5bf06c] font-bold outline-none cursor-pointer text-xs pr-1"
-            >
-              {supportedLanguages.map((lang) => (
-                <option key={lang.code} value={lang.code} className="bg-white text-slate-900 dark:bg-[#141e18] dark:text-[#dae5dc] py-1">
-                  {lang.name} ({lang.code.toUpperCase()})
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Theme Mode Toggle Button */}
-          <button
-            onClick={toggleTheme}
-            id="theme-toggle-btn"
-            className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-white border border-slate-300 hover:bg-slate-100 text-slate-800 dark:bg-[#18221c] dark:border-[#2d3731] dark:hover:bg-[#222c26] dark:text-[#dae5dc] flex items-center justify-center transition-all cursor-pointer shadow-sm active:scale-95 shrink-0"
-            title={theme === 'dark' ? 'Switch to Light Mode (दिन का मोड)' : 'Switch to Dark Mode (रात का मोड)'}
-            aria-label="Toggle Dark and Light mode"
-          >
-            {theme === 'dark' ? (
-              <Sun className="w-4 h-4 text-amber-500" />
-            ) : (
-              <Moon className="w-4 h-4 text-emerald-700" />
-            )}
-          </button>
-
-          {/* Farmer Free Badge */}
-          <div className="hidden lg:flex items-center gap-1.5 bg-emerald-50 text-emerald-900 border border-emerald-200 dark:bg-[#222c26] dark:text-[#dae5dc] dark:border-[#2d3731] px-2.5 py-1 rounded-full">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-600 dark:bg-[#5bf06c] opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-600 dark:bg-[#5bf06c]"></span>
-            </span>
-            <span className="text-[11px] font-medium whitespace-nowrap">
-              {t.nav.freeBadge}
+              <PhoneCall className="w-3 h-3 text-[#ffeb3b]" />
+              <span>Krishi Rakshak Portal &amp; Helpline (KRPH) - <strong className="text-[#ffeb3b]">14447</strong></span>
+            </a>
+            <span className="hidden md:inline text-emerald-400/60">|</span>
+            <span className="hidden md:inline text-emerald-100/80 text-[10px]">
+              Toll-Free Kisan Call Center: <strong className="text-white">1800-180-1551</strong>
             </span>
           </div>
 
-          {/* Quick Launch Tab button */}
-          <button
-            onClick={() => setActiveTab(activeTab === 'scanner' ? 'overview' : 'scanner')}
-            className="h-8 sm:h-9 px-3 sm:px-4 rounded-xl bg-[#39d353] text-[#00390c] text-xs font-bold flex items-center gap-1.5 shadow-[0_0_16px_rgba(57,211,83,0.3)] hover:opacity-95 active:scale-95 transition-all shrink-0"
-          >
-            <span>{activeTab === 'scanner' ? t.nav.homeBtn : t.nav.checkLeaf}</span>
-          </button>
-
-          {/* User Auth Profile Button */}
-          {currentUser ? (
-            <div className="flex items-center gap-1.5">
-              <button
-                onClick={onOpenAuth}
-                title={currentUser.email || 'Farmer Profile'}
-                className="w-8 h-8 rounded-full bg-[#39d353]/20 border border-emerald-500/40 flex items-center justify-center text-emerald-700 dark:text-[#5bf06c] hover:border-emerald-500 transition-all"
-              >
-                {currentUser.displayName ? currentUser.displayName[0].toUpperCase() : <User className="w-4 h-4" />}
-              </button>
-              <button
-                onClick={() => logOutUser()}
-                title={t.nav.signOut}
-                className="w-8 h-8 rounded-xl bg-white border border-slate-300 hover:bg-slate-100 text-slate-600 hover:text-red-600 dark:bg-[#18221c] dark:border-[#2d3731] dark:hover:bg-[#222c26] dark:text-[#869582] dark:hover:text-[#ffb4ab] flex items-center justify-center transition-colors"
-              >
-                <LogOut className="w-3.5 h-3.5" />
-              </button>
+          {/* Right: Accessibility Controls, Language, Theme */}
+          <div className="flex items-center gap-2.5 ml-auto text-[11px]">
+            <span className="hidden lg:inline text-emerald-100/80 hover:text-white cursor-pointer select-none">
+              Skip to Main Content
+            </span>
+            <span className="hidden lg:inline text-emerald-400/50">|</span>
+            <div className="hidden sm:flex items-center gap-1 font-bold text-[10px] bg-[#14532a] px-2 py-0.5 rounded border border-emerald-500/30">
+              <span className="cursor-pointer hover:text-yellow-300">A-</span>
+              <span className="cursor-pointer hover:text-yellow-300 mx-0.5">A</span>
+              <span className="cursor-pointer hover:text-yellow-300">A+</span>
             </div>
-          ) : (
+            <span className="hidden sm:inline text-emerald-400/50">|</span>
+
+            {/* Language Selector */}
+            <div className="flex items-center gap-1 bg-[#14532a] border border-emerald-500/40 px-2 py-0.5 rounded text-white text-xs">
+              <Globe className="w-3 h-3 text-emerald-300 shrink-0" />
+              <select
+                value={language}
+                onChange={(e) => handleLanguageChange(e.target.value as AppLanguage)}
+                aria-label="Select Language"
+                className="bg-transparent text-white font-bold outline-none cursor-pointer text-[11px] pr-1"
+              >
+                {supportedLanguages.map((lang) => (
+                  <option key={lang.code} value={lang.code} className="bg-white text-slate-900 dark:bg-[#141e18] dark:text-[#dae5dc]">
+                    {lang.name} ({lang.code.toUpperCase()})
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Theme Toggle */}
             <button
-              onClick={onOpenAuth}
-              className="w-8 h-8 rounded-full bg-[#39d353] text-[#00390c] flex items-center justify-center shadow hover:brightness-110 transition-all shrink-0"
-              title={t.nav.signIn}
+              onClick={toggleTheme}
+              className="w-6 h-6 rounded bg-[#14532a] border border-emerald-500/40 flex items-center justify-center hover:bg-emerald-700 transition cursor-pointer"
+              title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
             >
-              <User className="w-4 h-4 font-bold" />
+              {theme === 'dark' ? (
+                <Sun className="w-3.5 h-3.5 text-amber-300" />
+              ) : (
+                <Moon className="w-3.5 h-3.5 text-emerald-200" />
+              )}
             </button>
-          )}
+          </div>
         </div>
       </div>
 
-      {/* Mobile navigation bar */}
-      <div className="lg:hidden flex items-center justify-around gap-1 px-2 py-2 border-t border-slate-200 bg-white/95 text-slate-800 dark:border-[#222c26] dark:bg-[#0c1510]/95 shadow-sm">
+      {/* 2. Main White Brand Header Tier */}
+      <div className="w-full bg-white dark:bg-[#0c1611] border-b border-slate-200 dark:border-[#202b24] py-2 px-3 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
+          {/* Left: Government Emblem & KrishiRakshak Identity */}
+          <div className="flex items-center gap-3 sm:gap-4">
+            {/* National Insignia */}
+            <div className="flex items-center gap-2 border-r border-slate-200 dark:border-slate-800 pr-3 sm:pr-4">
+              <div className="w-8 h-8 rounded-full bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-700/60 flex items-center justify-center text-amber-800 dark:text-amber-300 text-sm font-bold shadow-xs">
+                🏛️
+              </div>
+              <div className="hidden sm:flex flex-col text-left">
+                <span className="text-[10px] font-black text-slate-800 dark:text-slate-200 uppercase tracking-tight leading-tight">
+                  भारत सरकार
+                </span>
+                <span className="text-[9px] text-slate-500 dark:text-slate-400 font-semibold leading-tight">
+                  Government of India
+                </span>
+              </div>
+            </div>
+
+            {/* KrishiRakshak Shield Logo & Identity */}
+            <div 
+              onClick={() => setActiveTab('overview')}
+              className="flex items-center gap-2.5 cursor-pointer select-none"
+            >
+              <img
+                alt="KrishiRakshak Brand Logo"
+                className="h-10 sm:h-12 w-auto object-contain transition-transform hover:scale-105 drop-shadow-xs"
+                src="/logo-icon.png"
+              />
+              <div className="flex flex-col">
+                <div className="flex items-center gap-2">
+                  <span className="font-space text-lg sm:text-2xl font-black text-[#1b5e20] dark:text-[#5bf06c] tracking-tight leading-none">
+                    KrishiRakshak
+                  </span>
+                  <span className="hidden md:inline-block px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-emerald-100 text-emerald-900 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300/60">
+                    KRPH • Bio-AI
+                  </span>
+                </div>
+                <span className="text-[10px] sm:text-[11px] font-bold text-slate-600 dark:text-slate-300 mt-0.5">
+                  कृषि एवं किसान कल्याण मंत्रालय • Precision Bio-AI &amp; Diagnostics
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Controls: Free Badge & Auth Profile */}
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            <div className="hidden lg:flex items-center gap-1.5 bg-emerald-50 text-emerald-900 border border-emerald-200 dark:bg-[#1a261e] dark:text-[#dae5dc] dark:border-emerald-800/60 px-3 py-1 rounded-full text-xs font-bold">
+              <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-[#5bf06c]" />
+              <span>{t.nav.freeBadge}</span>
+            </div>
+
+            {currentUser ? (
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={onOpenAuth}
+                  title={currentUser.email || 'Farmer Profile'}
+                  className="h-8 px-3 rounded-xl bg-emerald-100 dark:bg-emerald-950 text-emerald-900 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800 font-bold text-xs flex items-center gap-1.5"
+                >
+                  <User className="w-3.5 h-3.5" />
+                  <span className="max-w-[80px] truncate">{currentUser.displayName || 'Profile'}</span>
+                </button>
+                <button
+                  onClick={() => logOutUser()}
+                  title={t.nav.signOut}
+                  className="w-8 h-8 rounded-xl bg-slate-100 hover:bg-red-50 text-slate-600 hover:text-red-600 dark:bg-[#18221c] dark:text-slate-300 flex items-center justify-center transition-colors"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={onOpenAuth}
+                className="h-8 sm:h-9 px-3 sm:px-4 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-[#1c2921] dark:hover:bg-[#25372c] text-slate-800 dark:text-white font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer"
+              >
+                <User className="w-3.5 h-3.5 text-emerald-700 dark:text-[#5bf06c]" />
+                <span>{t.nav.signIn}</span>
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* 3. Deep Dark Navigation Ribbon */}
+      <nav className="w-full bg-[#0a180f] text-white shadow-sm border-t border-[#142e1d]">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 flex items-center justify-between h-11 sm:h-12">
+          {/* Main Navigation Tabs */}
+          <div className="flex items-center gap-1 sm:gap-2 overflow-x-auto no-scrollbar py-1">
+            {mainNavItems.map((item) => {
+              const isActive = activeTab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveTab(item.id)}
+                  className={`text-xs sm:text-sm font-bold transition-all px-3 py-1.5 rounded-lg flex items-center gap-1.5 shrink-0 cursor-pointer ${
+                    isActive
+                      ? 'bg-[#163b22] text-[#5bf06c] shadow-inner font-black ring-1 ring-[#39d353]/40'
+                      : 'text-emerald-100/75 hover:text-white hover:bg-[#122718]'
+                  }`}
+                >
+                  <span className="text-xs">{item.icon}</span>
+                  <span>{item.label}</span>
+                </button>
+              );
+            })}
+
+            {/* "More Tools" Dropdown */}
+            <div className="relative" ref={moreMenuRef}>
+              <button
+                type="button"
+                onClick={() => setIsMoreOpen(!isMoreOpen)}
+                className={`text-xs sm:text-sm font-bold transition-all py-1.5 px-3 rounded-lg flex items-center gap-1.5 shrink-0 cursor-pointer ${
+                  isMoreTabActive
+                    ? 'bg-[#163b22] text-[#5bf06c] shadow-inner font-black ring-1 ring-[#39d353]/40'
+                    : 'text-emerald-100/75 hover:text-white hover:bg-[#122718]'
+                }`}
+              >
+                <Sparkles className="w-3.5 h-3.5 text-yellow-300" />
+                <span>{selectedDialect === 'hi' ? 'अन्य सेवाएं' : selectedDialect === 'mr' ? 'अधिक सेवा' : 'More Tools'}</span>
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isMoreOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {isMoreOpen && (
+                <div className="absolute left-0 mt-2 w-64 bg-[#0c1811] rounded-2xl shadow-2xl border border-[#1f422b] p-2 z-50 animate-in fade-in zoom-in-95 duration-150 text-slate-200">
+                  {moreServices.map((srv) => {
+                    const Icon = srv.icon;
+                    const isActive = activeTab === srv.id;
+                    return (
+                      <button
+                        key={srv.id}
+                        type="button"
+                        onClick={() => {
+                          setActiveTab(srv.id);
+                          setIsMoreOpen(false);
+                        }}
+                        className={`w-full text-left p-2.5 rounded-xl flex items-center justify-between transition cursor-pointer ${
+                          isActive
+                            ? 'bg-[#183d24] text-[#5bf06c] font-bold'
+                            : 'hover:bg-[#14291c] text-slate-200'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-8 h-8 rounded-lg bg-[#183d24] text-[#5bf06c] flex items-center justify-center shrink-0">
+                            <Icon className="w-4 h-4" />
+                          </div>
+                          <div>
+                            <span className="font-bold text-xs block leading-tight">{srv.label}</span>
+                            <span className="text-[10px] text-slate-400 block">{srv.sub}</span>
+                          </div>
+                        </div>
+                        {srv.badge && (
+                          <span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-600 text-white">
+                            {srv.badge}
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Right Signature Golden-Yellow Action Button (Matches "Register" in reference) */}
+          <div className="flex items-center gap-2 shrink-0 ml-2">
+            <button
+              onClick={() => setActiveTab(activeTab === 'scanner' ? 'overview' : 'scanner')}
+              className="h-8 sm:h-9 px-3.5 sm:px-5 rounded-lg bg-[#fbc02d] hover:bg-[#f9a825] active:bg-[#f57f17] text-[#134e27] font-black text-xs sm:text-sm flex items-center gap-1.5 shadow-md hover:shadow-lg transition-all cursor-pointer transform active:scale-95 whitespace-nowrap"
+            >
+              <span>{activeTab === 'scanner' ? '🏠 ' + t.nav.homeBtn : '🔍 ' + t.nav.checkLeaf}</span>
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      {/* Mobile Navigation Bar */}
+      <div className="lg:hidden flex items-center justify-around gap-1 px-2 py-1.5 bg-[#0a180f] text-white border-t border-[#142e1d] shadow-sm">
         {mainNavItems.map((item) => (
           <button
             key={item.id}
             onClick={() => setActiveTab(item.id)}
-            className={`text-xs px-2 py-1 rounded-xl whitespace-nowrap transition-colors flex flex-col items-center gap-0.5 shrink-0 ${
+            className={`text-xs px-2 py-1 rounded-lg whitespace-nowrap transition-colors flex flex-col items-center gap-0.5 shrink-0 ${
               activeTab === item.id
-                ? 'text-emerald-700 dark:text-[#5bf06c] font-black'
-                : 'text-slate-500 hover:text-slate-900 dark:text-[#bccbb6]'
+                ? 'text-yellow-300 font-black'
+                : 'text-emerald-100 hover:text-white'
             }`}
           >
-            <span className="text-base leading-none">{item.icon}</span>
+            <span className="text-sm leading-none">{item.icon}</span>
             <span className="text-[10px] font-bold">{item.label}</span>
           </button>
         ))}
         <button
           type="button"
           onClick={() => setActiveTab(isMoreTabActive ? 'overview' : 'community')}
-          className={`text-xs px-2 py-1 rounded-xl whitespace-nowrap transition-colors flex flex-col items-center gap-0.5 shrink-0 ${
+          className={`text-xs px-2 py-1 rounded-lg whitespace-nowrap transition-colors flex flex-col items-center gap-0.5 shrink-0 ${
             isMoreTabActive
-              ? 'text-emerald-700 dark:text-[#5bf06c] font-black'
-              : 'text-slate-500 hover:text-slate-900 dark:text-[#bccbb6]'
+              ? 'text-yellow-300 font-black'
+              : 'text-emerald-100 hover:text-white'
           }`}
         >
-          <span className="text-base leading-none">✨</span>
+          <span className="text-sm leading-none">✨</span>
           <span className="text-[10px] font-bold">
             {selectedDialect === 'hi' ? 'अन्य' : 'More'}
           </span>

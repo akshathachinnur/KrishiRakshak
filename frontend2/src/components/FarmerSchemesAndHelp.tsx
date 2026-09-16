@@ -77,12 +77,12 @@ export const FarmerSchemesAndHelp: React.FC = () => {
 
   const faqs = [
     {
-      q: 'How do I take a good photo of a diseased leaf?',
-      a: 'Hold the camera steady in daylight (avoid direct blinding sun). Focus closely on the leaf showing yellow spots, brown patches, or curled edges so the symptom is clear and sharp.'
+      q: 'How do I take a good photo of a diseased plant?',
+      a: 'Hold the camera steady in daylight (avoid direct blinding sun). Focus closely on the plant parts showing yellow spots, brown patches, or curled edges so the symptom is clear and sharp.'
     },
     {
       q: 'What should I do if a disease is diagnosed as Critical or Severe?',
-      a: 'First, isolate and remove badly infected fallen leaves so spores do not blow to healthy plants. Then apply the recommended biological or chemical spray immediately. For free expert confirmation, call 1800-180-1551.'
+      a: 'First, isolate and remove badly infected plant parts so spores do not blow to healthy plants. Then apply the recommended biological or chemical spray immediately. For free expert confirmation, call 1800-180-1551.'
     },
     {
       q: 'Are the organic remedies safe for vegetable and fruit crops?',

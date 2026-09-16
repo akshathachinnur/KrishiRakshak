@@ -439,3 +439,53 @@
   background: #39d353;
 }
 
+/* PMFBY & Krishi Rakshak Portal Color Palette & Design Tokens */
+.bg-pmfby-topbar {
+  background-color: #1e6b37;
+}
+
+.bg-pmfby-nav {
+  background-color: #18542c;
+}
+
+.btn-pmfby-gold {
+  background-color: #fbc02d;
+  color: #134e27;
+  font-weight: 800;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease;
+}
+
+.btn-pmfby-gold:hover {
+  background-color: #f9a825;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(251, 192, 45, 0.35);
+}
+
+.btn-pmfby-gold:active {
+  background-color: #f57f17;
+  transform: translateY(0);
+}
+
+.btn-pmfby-green {
+  background-color: #18542c;
+  color: #ffffff;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+
+.btn-pmfby-green:hover {
+  background-color: #23733e;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(24, 84, 44, 0.25);
+}
+
+.pmfby-hero-gradient {
+  background: linear-gradient(135deg, #1f6130 0%, #2e7d32 40%, #388e3c 75%, #4caf50 100%);
+}
+
+.pmfby-hero-mandala {
+  background-image: radial-gradient(circle at 10% 50%, rgba(255, 255, 255, 0.08) 0%, transparent 40%),
+                    radial-gradient(circle at 90% 50%, rgba(255, 255, 255, 0.08) 0%, transparent 40%);
+}
+

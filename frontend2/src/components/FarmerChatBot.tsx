@@ -41,7 +41,7 @@ const BOT_LANGUAGES: { code: AppLanguage; label: string; english: string }[] = [
 
 const BOT_WELCOME_MESSAGES: Record<AppLanguage, string> = {
   hi: 'नमस्ते किसान भाई! मैं आपका कृषि रक्षक साथी हूँ। अपनी भाषा में कोई भी कृषि सवाल पूछें — पत्ती रोग की दवा, जैविक कीटनाशक, बुवाई का समय या आज के मंडी भाव।',
-  en: 'Namaste Kisan Bhai! I am your KrishiRakshak farm companion. Ask me any farming question in your own language — leaf disease medicines, natural pest remedies, sowing advice, or today\'s Mandi market rates.',
+  en: 'Namaste Kisan Bhai! I am your KrishiRakshak farm companion. Ask me any farming question in your own language — plant disease medicines, natural pest remedies, sowing advice, or today\'s Mandi market rates.',
   mr: 'नमस्कार शेतकरी बंधूंनो! मी आपला कृषी रक्षक साथीदार आहे. आपल्या भाषेत शेतीविषयक कोणताही प्रश्न विचारा — पानांच्या रोगावरील औषधे, सेंद्रिय कीटकनाशके किंवा आजचे बाजार भाव.',
   kn: 'ನಮಸ್ಕಾರ ರೈತ ಬಾಂಧವರೇ! ನಾನು ನಿಮ್ಮ ಕೃಷಿ ರಕ್ಷಕ ಕೃಷಿ ಸಂಗಾತಿ. ನಿಮ್ಮ ಭಾಷೆಯಲ್ಲೇ ಯಾವುದೇ ಪ್ರಶ್ನೆ ಕೇಳಿ — ಎಲೆ ರೋಗದ ಔಷಧ, ನೈಸರ್ಗಿಕ ಕ್ರಿಮಿನಾಶಕ, ಬಿತ್ತನೆ ಮಾಹಿತಿ ಅಥವಾ ಮಾರುಕಟ್ಟೆ ದರಗಳು.',
   te: 'నమస్కారం రైతు సోదరులారా! నేను మీ కృషి రక్షక్ వ్యవసాయ సహాయకుడిని. మీ మాతృభాషలోనే వ్యవసాయ ప్రశ్నలు అడగండి — ఆకు తెగుళ్ల మందులు, సేంద్రీయ పురుగుమందులు లేదా మార్కెట్ ధరలు.',

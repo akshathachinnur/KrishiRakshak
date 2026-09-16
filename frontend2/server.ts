@@ -143,15 +143,15 @@ app.post('/api/diagnose', async (req: Request, res: Response) => {
                   }
                 },
                 {
-                  text: `Analyze this agricultural crop leaf image for foliar diseases. Provide JSON format with fields:
+                  text: `Analyze this agricultural crop/plant image for diseases. Provide JSON format with fields:
                   {
                     "cropName": "Crop name",
-                    "diseaseName": "Disease or Healthy",
-                    "scientificName": "Scientific pathogen name",
+                    "diseaseName": "Disease name or 'Healthy' if no disease found",
+                    "scientificName": "Scientific pathogen name or 'N/A' if healthy",
                     "confidence": 0.95,
                     "status": "critical" | "warning" | "optimal",
                     "foliarLesionPercent": 85.0,
-                    "description": "2-sentence clinical description of symptoms",
+                    "description": "2-sentence clinical description of symptoms. If healthy, describe the healthy state.",
                     "organicTreatments": ["Treatment 1", "Treatment 2"],
                     "chemicalTreatments": ["Treatment 1 with dosage", "Treatment 2"],
                     "audioAdvisories": {
@@ -160,7 +160,8 @@ app.post('/api/diagnose', async (req: Request, res: Response) => {
                       "kn": "Kannada advice",
                       "te": "Telugu advice"
                     }
-                  }`
+                  }
+                  IMPORTANT: If the plant looks healthy with no visible disease symptoms, set status to "optimal", diseaseName to "Healthy", confidence to 0.95+, foliarLesionPercent to 0, and provide general care tips instead of treatments.`
                 }
               ]
             }
@@ -174,36 +175,36 @@ app.post('/api/diagnose', async (req: Request, res: Response) => {
           return res.json({ success: true, diagnosis: parsed });
         }
       } catch (geminiErr) {
-        console.warn('Gemini vision diagnosis fallback to trained CNN graph:', geminiErr);
+        console.warn('Gemini vision diagnosis unavailable:', geminiErr);
       }
     }
 
-    // Default fast ONNX fallback matching repository MobileNetV3-AgriLarge
+    // Fallback when AI is unavailable — return honest "unable to analyze" instead of fake diagnosis
     res.json({
       success: true,
       diagnosis: {
-        cropName: cropName || 'Tomato (Solanum lycopersicum)',
-        diseaseName: 'Tomato Early Blight',
-        scientificName: 'Alternaria solani',
-        confidence: 0.984,
-        status: 'critical',
-        foliarLesionPercent: 97.4,
-        description: 'Concentric brown rings detected on lower foliage. High probability of leaf defoliation within 96 hours if untreated under current ambient humidity.',
+        cropName: cropName || 'Uploaded Plant Image',
+        diseaseName: 'AI Analysis Unavailable',
+        scientificName: 'Requires valid Gemini API key (AIza...)',
+        confidence: 0,
+        status: 'warning',
+        foliarLesionPercent: 0,
+        description: 'The AI plant disease detection service is currently unavailable. Please configure a valid Gemini API key (starting with AIza) in frontend2/.env to enable real-time AI-powered diagnosis. Get a free key at aistudio.google.com/apikey.',
         organicTreatments: [
-          'Neem oil extract (Azadirachtin 10000 ppm) at 3ml/L.',
-          'Spray Pseudomonas fluorescens at root collar.'
+          'AI diagnosis unavailable — please get a Gemini API key from aistudio.google.com/apikey',
+          'Once configured, re-upload the photo for accurate disease detection.'
         ],
         chemicalTreatments: [
-          'Mancozeb 75% WP @ 2.0g per liter water.',
-          'Repeat after 12 days if rains persist.'
+          'AI diagnosis unavailable — manual inspection recommended.',
+          'Consult your local Krishi Vigyan Kendra (KVK) for expert guidance.'
         ],
         audioAdvisories: {
-          en: 'Tomato early blight identified. Apply Mancozeb 75 WP at 2 grams per liter.',
-          hi: 'टमाटर में झुलसा रोग है, 2 ग्राम मैन्कोजेब प्रति लीटर पानी छिड़कें',
-          mr: 'टोमॅटोवर करपा रोग आढळला आहे, २ ग्रॅम मॅन्कोझेब प्रति लिटर पाण्यात फवारा.',
-          kn: 'ಟೊಮ್ಯಾಟೋ ಎಲೆಗಳಲ್ಲಿ ಮುಂಜಾನೆ ರೋಗವಿದೆ, ಪ್ರತಿ ಲೀಟರ್ ನೀರಿಗೆ 2 ಗ್ರಾಂ ಮ್ಯಾಂಕೋಜೆಬ್ ಸಿಂಪಡಿಸಿ.',
-          te: 'టొమాటో ఆకులపై ముందస్తు మచ్చల తెగులు ఉంది, లీటరు నీటికి 2 గ్రాముల మాంకోజెబ్ పిచికారీ చేయండి.',
-          gu: 'ટામેટામાં સુકારો રોગ છે, ૨ ગ્રામ મેન્કોઝેબ પ્રતિ લિટર પાણીમાં છાંટો.'
+          en: 'AI plant analysis is currently unavailable. Please configure a valid Gemini API key to enable diagnosis.',
+          hi: 'AI पौधा विश्लेषण उपलब्ध नहीं है। कृपया निदान सक्षम करने के लिए Gemini API key कॉन्फ़िगर करें।',
+          mr: 'AI वनस्पती विश्लेषण उपलब्ध नाही. कृपया निदान सक्षम करण्यासाठी Gemini API key कॉन्फिगर करा.',
+          kn: 'AI ಸಸ್ಯ ವಿಶ್ಲೇಷಣೆ ಲಭ್ಯವಿಲ್ಲ. ದಯವಿಟ್ಟು ರೋಗನಿರ್ಣಯಕ್ಕಾಗಿ Gemini API key ಅನ್ನು ಕಾನ್ಫಿಗರ್ ಮಾಡಿ.',
+          te: 'AI మొక్క విశ్లేషణ అందుబాటులో లేదు. దయచేసి రోగ నిర్ధారణ కోసం Gemini API key ని కాన్ఫిగర్ చేయండి.',
+          gu: 'AI છોડ વિશ્લેષણ ઉપલબ્ધ નથી. કૃપા કરીને નિદાન માટે Gemini API key ગોઠવો.'
         }
       }
     });

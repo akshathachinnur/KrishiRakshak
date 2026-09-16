@@ -92,7 +92,7 @@ export const AgroWeather: React.FC = () => {
     }
 
     if (humidity > 75 && condition.toLowerCase().includes('cloud')) {
-      list.push('High relative humidity + overcast sky: Favorable conditions for fungal leaf blight & mildew. Scout lower foliage.');
+      list.push('High relative humidity + overcast sky: Favorable conditions for fungal plant blight & mildew. Scout lower foliage.');
     }
 
     // Specific crop rules
@@ -101,7 +101,7 @@ export const AgroWeather: React.FC = () => {
     } else if (crop.includes('Cotton')) {
       if (rain > 5) list.push('Cotton: High humidity and water stagnation increase boll rot incidence. Clear furrows.');
     } else if (crop.includes('Wheat')) {
-      if (rain > 3) list.push('Wheat: Wet micro-climate triggers yellow rust. Monitor flag leaves.');
+      if (rain > 3) list.push('Wheat: Wet micro-climate triggers yellow rust. Monitor plant foliage.');
     } else if (crop.includes('Tomato') || crop.includes('Potato')) {
       if (humidity > 80) list.push('Solanaceous crops: Early/Late blight outbreak window. Keep protective copper or mancozeb ready.');
     }

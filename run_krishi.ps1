@@ -13,4 +13,4 @@ foreach ($port in $ports) {
 
 $env:PORT = '3010'
 Set-Location 'c:\Users\Akshatha Chinnur\Downloads\KrishiRakshak-main\KrishiRakshak-main\frontend2'
-npx tsx server.ts --host 0.0.0.0
+npx.cmd tsx server.ts --host 0.0.0.0

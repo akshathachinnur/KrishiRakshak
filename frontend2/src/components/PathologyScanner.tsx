@@ -67,39 +67,62 @@ export const PathologyScanner: React.FC<PathologyScannerProps> = ({
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = () => {
+      reader.onload = async () => {
         const base64 = reader.result as string;
         setSelectedKey('custom');
-        // Run diagnosis on custom image
-        const customPathology: LeafPathology = {
-          id: 'custom-scan-' + Date.now(),
-          cropName: 'Field Sample Foliage',
-          scientificName: 'Solanaceae / Poaceae',
-          diseaseName: 'Suspected Cercospora Leaf Spot',
-          confidence: 94.7,
-          badgeText: 'Foliar Infection Detected',
-          badgeType: 'critical',
-          foliarLesionPercent: 88.3,
-          description: 'Dark necrotic circular lesions with chlorotic halos identified across leaf margin. Immediate fungicidal intervention advised.',
-          organicTreatments: [
-            'Apply cold-pressed Neem Seed Kernel Extract (5%).',
-            'Spray fermented butter-milk (chaas) solution @ 50ml/L as mild bio-fungicide.'
-          ],
-          chemicalTreatments: [
-            'Carbendazim 12% + Mancozeb 63% WP @ 2.0g/L water.',
-            'Ensure spray coverage on lower foliar surface.'
-          ],
-          audioAdvisories: {
-            en: 'Cercospora fungal infection identified. Spray Carbendazim plus Mancozeb at 2 grams per liter water.',
-            hi: 'पत्तियों में सर्कोस्पोरा धब्बा रोग है। 2 ग्राम कार्बेंडाजिम और मैंकोजेब प्रति लीटर पानी में मिलाकर छिड़कें।',
-            mr: 'पानांवर सर्कोस्पोरा ठिपके रोग आहे. २ ग्रॅम कार्बेन्डाझिम अधिक मॅन्कोझेब प्रति लिटर पाण्यात मिसळून फवारा.',
-            kn: 'ಎಲೆಗಳಲ್ಲಿ ಸರ್ಕೋಸ್ಪೋರಾ ಚುಕ್ಕೆ ರೋಗ ಕಂಡುಬಂದಿದೆ. ಪ್ರತಿ ಲೀಟರ್ ನೀರಿಗೆ 2 ಗ್ರಾಂ ಕಾರ್ಬೆಂಡಾಜಿಮ್ ಸಿಂಪಡಿಸಿ.',
-            te: 'ఆకులపై సర్కోస్పోరా మచ్చల తెగులు సోకింది. లీటరుకు 2 గ్రాముల కార్బండాజిమ్ కలపి స్ప్రే చేయండి.',
-            gu: 'પાંદડામાં સર્કોસ્પોરા ટપકાં રોગ છે. ૨ ગ્રામ કાર્બેન્ડાઝિમ વત્તા મેન્કોઝેબ પ્રતિ લિટર પાણીમાં છાંટો.'
-          },
-          sampleImageUrl: base64
-        };
-        triggerScan(customPathology, base64);
+        setCustomImage(base64);
+        setIsScanning(true);
+        setSaveSuccess(false);
+
+        try {
+          const response = await fetch('/api/diagnose', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ imageBase64: base64, cropName: 'Unknown Crop' }),
+          });
+          const data = await response.json();
+
+          if (data.success && data.diagnosis) {
+            const d = data.diagnosis;
+            const customPathology: LeafPathology = {
+              id: 'custom-scan-' + Date.now(),
+              cropName: d.cropName || 'Field Sample Foliage',
+              scientificName: d.scientificName || 'Unknown',
+              diseaseName: d.diseaseName || 'Analysis Complete',
+              confidence: typeof d.confidence === 'number' ? d.confidence * 100 : (d.confidence || 0),
+              badgeText: d.status === 'optimal' ? 'Healthy Plant' : d.status === 'warning' ? 'Caution Required' : 'Foliar Infection Detected',
+              badgeType: d.status === 'optimal' ? 'healthy' : d.status === 'warning' ? 'warning' : 'critical',
+              foliarLesionPercent: d.foliarLesionPercent || 0,
+              description: d.description || 'Analysis complete.',
+              organicTreatments: d.organicTreatments || [],
+              chemicalTreatments: d.chemicalTreatments || [],
+              audioAdvisories: d.audioAdvisories || { en: d.description || 'Analysis complete.' },
+              sampleImageUrl: base64,
+            };
+            setActivePathology(customPathology);
+          }
+        } catch (err) {
+          console.error('Diagnosis API error:', err);
+          // Fallback: show a generic result prompting the user to check the image
+          const fallbackPathology: LeafPathology = {
+            id: 'custom-scan-' + Date.now(),
+            cropName: 'Field Sample Foliage',
+            scientificName: 'Pending Analysis',
+            diseaseName: 'Could not analyze image',
+            confidence: 0,
+            badgeText: 'Analysis Failed',
+            badgeType: 'warning',
+            foliarLesionPercent: 0,
+            description: 'Unable to reach the diagnosis server. Please check your connection and try again.',
+            organicTreatments: [],
+            chemicalTreatments: [],
+            audioAdvisories: { en: 'Unable to analyze image. Please try again.' },
+            sampleImageUrl: base64,
+          };
+          setActivePathology(fallbackPathology);
+        } finally {
+          setIsScanning(false);
+        }
       };
       reader.readAsDataURL(file);
     }
@@ -298,7 +321,7 @@ export const PathologyScanner: React.FC<PathologyScannerProps> = ({
               <div className="absolute top-4 left-4 z-10 flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#0c1510]/80 backdrop-blur-md border border-[#2d3731]">
                 <span className={`w-2 h-2 rounded-full ${isScanning ? 'bg-[#ffcb87] animate-ping' : 'bg-[#5bf06c]'}`}></span>
                 <span className="font-space text-[10px] text-[#dae5dc] uppercase tracking-wider font-bold">
-                  {isScanning ? 'CHECKING LEAF...' : 'PLANT DOCTOR ACTIVE'}
+                  {isScanning ? 'CHECKING PLANT...' : 'PLANT DOCTOR ACTIVE'}
                 </span>
               </div>
 
@@ -331,7 +354,7 @@ export const PathologyScanner: React.FC<PathologyScannerProps> = ({
                 className="px-3 py-1.5 rounded-xl bg-[#222c26] hover:bg-[#2d3731] text-[#dae5dc] font-medium flex items-center gap-1.5 transition-colors disabled:opacity-50"
               >
                 <RefreshCw className={`w-3.5 h-3.5 text-[#5bf06c] ${isScanning ? 'animate-spin' : ''}`} />
-                <span>Re-Scan Leaf</span>
+                <span>Re-Scan Plant</span>
               </button>
             </div>
           </div>

@@ -46,7 +46,7 @@ export default function App() {
           scientificName: 'Alternaria solani',
           confidence: 98.4,
           status: 'critical',
-          description: 'Concentric brown rings on lower foliage. High probability of leaf defoliation.',
+          description: 'Concentric brown rings on lower foliage. High probability of plant defoliation.',
           organicTreatment: 'Neem oil extract (Azadirachtin 10000 ppm) at 3ml/L.',
           chemicalTreatment: 'Mancozeb 75% WP @ 2.0g per liter water.',
           timestamp: Date.now() - 1000 * 60 * 60 * 3,
@@ -118,7 +118,7 @@ export default function App() {
       />
 
       {/* Main Content Area */}
-      <main className="flex-1 pt-16">
+      <main className="flex-1 pt-28 sm:pt-32">
         {/* 1. Farmer Home Dashboard */}
         {activeTab === 'overview' && (
           <div className="pt-2 pb-12">
@@ -131,7 +131,7 @@ export default function App() {
           </div>
         )}
 
-        {/* 2. Leaf Doctor (Pathology Vision) */}
+        {/* 2. Plant Doctor (Pathology Vision) */}
         {activeTab === 'scanner' && (
           <div className="pt-4 pb-12">
             <PathologyScanner

@@ -10,11 +10,11 @@ export const PATHOLOGY_PRESETS: Record<string, LeafPathology> = {
     badgeText: 'Pathogen Identified',
     badgeType: 'critical',
     foliarLesionPercent: 97.4,
-    description: 'Concentric brown rings detected on lower foliage. High probability of leaf defoliation within 96 hours if untreated under current ambient humidity.',
+    description: 'Concentric brown rings detected on lower foliage. High probability of plant defoliation within 96 hours if untreated under current ambient humidity.',
     organicTreatments: [
       'Neem oil extract (Azadirachtin 10000 ppm) at 3ml/L.',
       'Spray Pseudomonas fluorescens at root collar.',
-      'Remove lower infected leaves 15cm above soil bed.'
+      'Remove lower infected plant foliage 15cm above soil bed.'
     ],
     chemicalTreatments: [
       'Mancozeb 75% WP @ 2.0g per liter water.',
@@ -40,7 +40,7 @@ export const PATHOLOGY_PRESETS: Record<string, LeafPathology> = {
     badgeText: 'Fungal Outbreak Risk',
     badgeType: 'critical',
     foliarLesionPercent: 96.2,
-    description: 'Diamond and spindle-shaped lesions on flag leaves with grayish centers. Immediate risk of panicle/neck blast if heading is in progress.',
+    description: 'Diamond and spindle-shaped lesions on plant foliage with grayish centers. Immediate risk of panicle/neck blast if heading is in progress.',
     organicTreatments: [
       'Panchagavya foliar spray at 3% concentration in early morning.',
       'Seed treatment with Trichoderma viride @ 4g/kg seed.',
@@ -70,7 +70,7 @@ export const PATHOLOGY_PRESETS: Record<string, LeafPathology> = {
     badgeText: 'Critical Blight Alert',
     badgeType: 'critical',
     foliarLesionPercent: 99.1,
-    description: 'Water-soaked irregular dark green lesions turning purplish-black with white mildew fuzz on leaf undersides during high moisture periods.',
+    description: 'Water-soaked irregular dark green lesions turning purplish-black with white mildew fuzz on plant undersides during high moisture periods.',
     organicTreatments: [
       'Copper Hydroxide organic formulation at 2g/L.',
       'Ensure rapid field drainage; ridging high soil around tubers.',

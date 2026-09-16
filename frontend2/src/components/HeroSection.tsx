@@ -135,7 +135,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               {/* Reference Image Hero Placement */}
               <div className="relative aspect-square w-full overflow-hidden">
                 <img
-                  alt="KrishiRakshak AI Diagnostic scanning soybean leaf with glowing neural grid overlay"
+                  alt="KrishiRakshak AI Diagnostic scanning soybean plant with glowing neural grid overlay"
                   className="w-full h-full object-cover select-none group-hover:scale-105 transition-transform duration-700"
                   src="https://lh3.googleusercontent.com/aida/AEtjO1VwCB9VY5ixcoI9Jo1iuHrH1zGHExWConAUzSVjdnXoKOK3QLpBqL4PTboHWLdGtCzh_jZTFrwrPM1hy9-nni9eCYPsByhTvJpIdBeevEfYPGhUZnJqj-uVXYKxZp4J1L8x-j6MGn9PS7Xe4zp_u7vz-uh-_fQ3_NpStDvsjQAWh3XHXkIXtJHRMNzFnNb1cZ-9pbzslWWPeP4Zqm9m4Y9oUwPC157Yp9V6dWEvJqtSmwcK840CmDQb7bs"
                 />
@@ -164,7 +164,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       <CheckCircle2 className="text-emerald-600 dark:text-[#5bf06c] w-5 h-5 shrink-0" />
                       <div>
                         <h4 className="text-sm font-bold text-slate-900 dark:text-[#dae5dc] leading-tight">Soybean Crop (सोयाबीन)</h4>
-                        <p className="text-xs text-emerald-700 dark:text-[#5bf06c] font-semibold">Healthy Leaf • 98.7% Confirmed</p>
+                        <p className="text-xs text-emerald-700 dark:text-[#5bf06c] font-semibold">Healthy Plant • 98.7% Confirmed</p>
                       </div>
                     </div>
                     <span className="px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-800 border border-emerald-300 dark:bg-[#5bf06c]/20 dark:text-[#5bf06c] dark:border-[#5bf06c]/30 font-space text-[11px] font-bold uppercase">
@@ -186,7 +186,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       <span className="text-sm text-emerald-700 dark:text-[#83da84] font-bold">Low</span>
                     </div>
                     <div className="flex flex-col">
-                      <span className="text-[11px] text-slate-500 dark:text-[#869582] font-medium">Leaf Temp</span>
+                      <span className="text-[11px] text-slate-500 dark:text-[#869582] font-medium">Plant Temp</span>
                       <span className="text-sm text-slate-900 dark:text-[#dae5dc] font-bold">22.4°C</span>
                     </div>
                   </div>

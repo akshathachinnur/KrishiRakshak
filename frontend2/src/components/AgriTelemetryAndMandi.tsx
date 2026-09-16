@@ -208,7 +208,7 @@ export const AgriTelemetryAndMandi: React.FC = () => {
                   <span className="font-space text-2xl font-bold text-[#dae5dc]">7.8 <span className="text-sm font-normal text-[#869582]">hrs</span></span>
                   <span className="text-xs text-emerald-600 dark:text-[#5bf06c] font-bold">Good Sun</span>
                 </div>
-                <span className="text-[10px] text-[#869582]">Adequate light for leaf photosynthesis</span>
+                <span className="text-[10px] text-[#869582]">Adequate light for plant photosynthesis</span>
               </div>
             </div>
 

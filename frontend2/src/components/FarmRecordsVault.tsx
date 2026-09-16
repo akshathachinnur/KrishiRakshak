@@ -7,7 +7,7 @@ import {
   AlertTriangle, 
   CheckCircle2, 
   Sparkles, 
-  Leaf,
+  Sprout,
   Layers,
   Database,
   ExternalLink
@@ -62,7 +62,7 @@ export const FarmRecordsVault: React.FC<FarmRecordsVaultProps> = ({
               My Farm Notebook
             </span>
             <h2 className="font-space text-3xl sm:text-4xl font-bold text-[#dae5dc] tracking-tight">
-              Saved Leaf Scans &amp; Crop Plans
+              Saved Plant Scans &amp; Crop Plans
             </h2>
             <p className="text-sm text-[#bccbb6] leading-relaxed">
               Your saved crop checks, recommended medicine spray amounts, and seasonal planting plans safely preserved for your field records.
@@ -98,7 +98,7 @@ export const FarmRecordsVault: React.FC<FarmRecordsVaultProps> = ({
                   : 'text-[#bccbb6] hover:text-[#dae5dc]'
               }`}
             >
-              <Leaf className="w-3.5 h-3.5" />
+              <Sprout className="w-3.5 h-3.5" />
               <span>Pathology Records ({diagnoses.length})</span>
             </button>
 

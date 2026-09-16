@@ -52,7 +52,7 @@ export const ProblemAndPipeline: React.FC = () => {
             </div>
             <h3 className="font-space text-lg font-bold text-[#dae5dc]">Late Disease Detection</h3>
             <p className="text-xs text-[#bccbb6] leading-relaxed">
-              Yellow spots or curling leaves are often noticed only after spreading across the whole field. Spot fungus or bacterial blight within 5 seconds.
+              Yellow spots or curling foliage on plants are often noticed only after spreading across the whole field. Spot fungus or bacterial blight within 5 seconds.
             </p>
           </div>
 
@@ -97,11 +97,11 @@ export const ProblemAndPipeline: React.FC = () => {
                 </div>
                 <span className="font-space text-base font-bold text-[#dae5dc] flex items-center gap-1.5">
                   <Camera className="w-4 h-4 text-[#059669]" />
-                  Take Leaf Photo
+                  Take Plant Photo
                 </span>
               </div>
               <p className="text-xs text-[#bccbb6] leading-relaxed pl-11 md:pl-0">
-                Snap a clear picture of the damaged or spotted leaf using your mobile phone camera or choose one from your gallery.
+                Snap a clear picture of the damaged or spotted plant using your mobile phone camera or choose one from your gallery.
               </p>
             </div>
 
