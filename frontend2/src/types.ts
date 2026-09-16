@@ -175,3 +175,34 @@ export interface WeatherForecastDay {
   isSuitableForSpraying: boolean;
 }
 
+export interface DiseaseReport {
+  id?: string;
+  farmerId: string;
+  farmerName?: string;
+  crop: string;
+  disease: string;
+  scientificName?: string;
+  confidence: number;
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  latitude: number;
+  longitude: number;
+  locationName?: string;
+  imageUrl?: string;
+  reportedAt: number;
+  source: 'leaf_scan' | 'farmer_report' | 'icar_advisory';
+  status: 'ai_detected' | 'needs_verification' | 'verified' | 'rejected';
+  precautions?: string[];
+  warning?: string;
+  distanceKm?: number; // client-side computed distance from farmer's registered farm
+}
+
+export interface FarmProfile {
+  farmName: string;
+  crop: string;
+  latitude: number;
+  longitude: number;
+  address?: string;
+  updatedAt: number;
+}
+
+

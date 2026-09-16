@@ -19,11 +19,15 @@ import {
   deleteDoc, 
   doc, 
   setDoc,
+  getDoc,
+  limit,
   serverTimestamp,
   Timestamp
 } from 'firebase/firestore';
 import firebaseConfig from '../../firebase-applet-config.json';
-import { DiagnosisRecord, CropPlanRecord, ChatMessage } from '../types';
+import { DiagnosisRecord, CropPlanRecord, ChatMessage, DiseaseReport, FarmProfile } from '../types';
+import { INITIAL_DEMO_REPORTS, DEFAULT_TEST_FARM } from './geoUtils';
+
 
 // Initialize Firebase App
 const app = getApps().length > 0 ? getApp() : initializeApp({
@@ -175,3 +179,152 @@ export const subscribeToCropPlans = (userId: string, callback: (plans: CropPlanR
     console.warn('Firestore subscription error (crop plans):', err);
   });
 };
+
+// ==========================================
+// Farm Profile & Location Management
+// ==========================================
+export const saveFarmProfileToCloud = async (userId: string, profile: FarmProfile): Promise<void> => {
+  try {
+    const profileDocRef = doc(db, 'users', userId, 'profile', 'farm');
+    await setDoc(profileDocRef, {
+      ...profile,
+      updatedAt: serverTimestamp(),
+      clientTimestamp: Date.now()
+    }, { merge: true });
+
+    // Also persist in localStorage for instant offline access
+    localStorage.setItem(`krishi_farm_profile_${userId}`, JSON.stringify(profile));
+  } catch (err) {
+    console.warn('Could not save farm profile to Firestore, saving to local storage:', err);
+    localStorage.setItem(`krishi_farm_profile_${userId}`, JSON.stringify(profile));
+  }
+};
+
+export const subscribeToFarmProfile = (
+  userId: string,
+  callback: (profile: FarmProfile | null) => void
+) => {
+  // First check local storage for instant initial paint
+  const local = localStorage.getItem(`krishi_farm_profile_${userId}`);
+  if (local) {
+    try {
+      callback(JSON.parse(local));
+    } catch (_) {}
+  }
+
+  const profileDocRef = doc(db, 'users', userId, 'profile', 'farm');
+  return onSnapshot(profileDocRef, (docSnap) => {
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      const profile: FarmProfile = {
+        farmName: data.farmName || 'Registered Farm',
+        crop: data.crop || 'Mixed Crops',
+        latitude: data.latitude,
+        longitude: data.longitude,
+        address: data.address,
+        updatedAt: data.clientTimestamp || Date.now()
+      };
+      localStorage.setItem(`krishi_farm_profile_${userId}`, JSON.stringify(profile));
+      callback(profile);
+    } else if (!local) {
+      callback(null);
+    }
+  }, (err) => {
+    console.warn('Firestore subscription error (farm profile):', err);
+    if (local) {
+      try {
+        callback(JSON.parse(local));
+      } catch (_) {}
+    }
+  });
+};
+
+// ==========================================
+// Disease Surveillance & Hotspot Reports
+// ==========================================
+export const saveDiseaseReportToCloud = async (
+  report: Omit<DiseaseReport, 'id'>
+): Promise<string> => {
+  try {
+    const collRef = collection(db, 'disease_reports');
+    const docRef = await addDoc(collRef, {
+      ...report,
+      createdAt: serverTimestamp(),
+      clientTimestamp: Date.now()
+    });
+    return docRef.id;
+  } catch (err) {
+    console.warn('Could not save disease report to Firestore (offline fallback):', err);
+    // Offline local persistence for resilience
+    const localReports: DiseaseReport[] = JSON.parse(
+      localStorage.getItem('krishi_local_disease_reports') || '[]'
+    );
+    const newReport: DiseaseReport = {
+      ...report,
+      id: `local-${Date.now()}`
+    };
+    localReports.unshift(newReport);
+    localStorage.setItem('krishi_local_disease_reports', JSON.stringify(localReports));
+    return newReport.id!;
+  }
+};
+
+export const subscribeToDiseaseReports = (
+  callback: (reports: DiseaseReport[]) => void
+) => {
+  const collRef = collection(db, 'disease_reports');
+  const q = query(collRef, orderBy('createdAt', 'desc'), limit(100));
+
+  return onSnapshot(q, (snapshot) => {
+    const cloudReports: DiseaseReport[] = [];
+    snapshot.forEach((docSnap) => {
+      const data = docSnap.data();
+      if (typeof data.latitude === 'number' && typeof data.longitude === 'number') {
+        cloudReports.push({
+          id: docSnap.id,
+          farmerId: data.farmerId || 'anonymous',
+          farmerName: data.farmerName,
+          crop: data.crop || 'Crop',
+          disease: data.disease || 'Unknown Pathology',
+          scientificName: data.scientificName,
+          confidence: data.confidence || 90,
+          severity: data.severity || 'medium',
+          latitude: data.latitude,
+          longitude: data.longitude,
+          locationName: data.locationName,
+          imageUrl: data.imageUrl,
+          reportedAt: data.clientTimestamp || (data.createdAt ? (data.createdAt as Timestamp).toMillis() : Date.now()),
+          source: data.source || 'leaf_scan',
+          status: data.status || 'ai_detected',
+          precautions: data.precautions || [],
+          warning: data.warning
+        });
+      }
+    });
+
+    // Merge with any offline local reports + initial demo reports for comprehensive coverage
+    const localReports: DiseaseReport[] = JSON.parse(
+      localStorage.getItem('krishi_local_disease_reports') || '[]'
+    );
+    
+    // Combine and deduplicate
+    const combined = [...localReports, ...cloudReports];
+    if (combined.length === 0) {
+      // Seed with initial realistic demo reports if Firestore collection is fresh
+      callback(INITIAL_DEMO_REPORTS);
+    } else {
+      // Combine demo reports if not present
+      const demoToAdd = INITIAL_DEMO_REPORTS.filter(
+        d => !combined.some(c => c.disease === d.disease && Math.abs(c.latitude - d.latitude) < 0.001)
+      );
+      callback([...combined, ...demoToAdd]);
+    }
+  }, (err) => {
+    console.warn('Firestore subscription error (disease reports, using demo seed):', err);
+    const localReports: DiseaseReport[] = JSON.parse(
+      localStorage.getItem('krishi_local_disease_reports') || '[]'
+    );
+    callback([...localReports, ...INITIAL_DEMO_REPORTS]);
+  });
+};
+

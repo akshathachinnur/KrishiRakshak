@@ -16,8 +16,9 @@ import {
   Check
 } from 'lucide-react';
 import { PATHOLOGY_PRESETS } from '../lib/agronomyData';
-import { LeafPathology, AppLanguage } from '../types';
-import { saveDiagnosisToCloud } from '../lib/firebase';
+import { LeafPathology, AppLanguage, FarmProfile } from '../types';
+import { saveDiagnosisToCloud, saveDiseaseReportToCloud } from '../lib/firebase';
+import { DEFAULT_TEST_FARM } from '../lib/geoUtils';
 import { useLanguage } from '../context/LanguageContext';
 
 interface PathologyScannerProps {
@@ -26,7 +27,9 @@ interface PathologyScannerProps {
   selectedDialect: AppLanguage;
   setSelectedDialect: (d: AppLanguage) => void;
   onDiagnosisSaved: () => void;
+  farmProfile?: FarmProfile | null;
 }
+
 
 export const PathologyScanner: React.FC<PathologyScannerProps> = ({
   currentUser,
@@ -34,7 +37,9 @@ export const PathologyScanner: React.FC<PathologyScannerProps> = ({
   selectedDialect,
   setSelectedDialect,
   onDiagnosisSaved,
+  farmProfile,
 }) => {
+
   const { t } = useLanguage();
   const [selectedKey, setSelectedKey] = useState<string>('tomato-blight');
   const [activePathology, setActivePathology] = useState<LeafPathology>(PATHOLOGY_PRESETS['tomato-blight']);
@@ -193,6 +198,35 @@ export const PathologyScanner: React.FC<PathologyScannerProps> = ({
         imageUrl: customImage || activePathology.sampleImageUrl,
         fieldName: 'Sector North - Plot 4',
       });
+
+      // Broadcast to regional 5 km surveillance hotspot collection if disease detected
+      if (activePathology.badgeType !== 'optimal') {
+        const activeFarmCoords = farmProfile || DEFAULT_TEST_FARM;
+        await saveDiseaseReportToCloud({
+          farmerId: currentUser.uid,
+          farmerName: currentUser.displayName || 'Farmer (Leaf Scan)',
+          crop: activePathology.cropName,
+          disease: activePathology.diseaseName,
+          scientificName: activePathology.scientificName,
+          confidence: Math.round(activePathology.confidence),
+          severity: activePathology.badgeType === 'critical' ? 'critical' : activePathology.foliarLesionPercent > 30 ? 'high' : 'medium',
+          latitude: activeFarmCoords.latitude,
+          longitude: activeFarmCoords.longitude,
+          locationName: activeFarmCoords.address || `${activeFarmCoords.farmName} Field Plot`,
+          imageUrl: customImage || activePathology.sampleImageUrl,
+          reportedAt: Date.now(),
+          source: 'leaf_scan',
+          status: activePathology.confidence >= 80 ? 'ai_detected' : 'needs_verification',
+          precautions: [
+            activePathology.organicTreatments[0] || 'Apply recommended bio-protective neem extract.',
+            activePathology.chemicalTreatments[0] || 'Consult local agronomy expert before chemical application.',
+            'Remove visibly blighted lower foliage and sanitize garden shears.',
+            'Avoid overhead sprinkler irrigation during high humidity periods.'
+          ],
+          warning: activePathology.audioAdvisories[selectedDialect] || activePathology.audioAdvisories.en
+        });
+      }
+
       setSaveSuccess(true);
       onDiagnosisSaved();
       setTimeout(() => setSaveSuccess(false), 4000);
@@ -203,6 +237,7 @@ export const PathologyScanner: React.FC<PathologyScannerProps> = ({
       setIsSaving(false);
     }
   };
+
 
   const currentDisplayImage = customImage || activePathology.sampleImageUrl;
 

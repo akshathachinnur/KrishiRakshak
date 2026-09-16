@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Header } from './components/Header';
 import { FarmerDashboard } from './components/FarmerDashboard';
 import { PathologyScanner } from './components/PathologyScanner';
+import { DiseaseHotspotMap } from './components/DiseaseHotspotMap';
 import { CropAndFertilizerHub } from './components/CropAndFertilizerHub';
 import { MandiAndWeatherHub } from './components/MandiAndWeatherHub';
 import { FarmerChatBot } from './components/FarmerChatBot';
@@ -11,9 +12,29 @@ import { FarmerCommunity } from './components/FarmerCommunity';
 import { AgriBlogs } from './components/AgriBlogs';
 import { AuthModal } from './components/AuthModal';
 import { Footer } from './components/Footer';
-import { auth, subscribeToDiagnoses, subscribeToCropPlans } from './lib/firebase';
+import {
+  auth,
+  subscribeToDiagnoses,
+  subscribeToCropPlans,
+  subscribeToDiseaseReports,
+  subscribeToFarmProfile,
+  saveFarmProfileToCloud,
+} from './lib/firebase';
 import { onAuthStateChanged, User } from 'firebase/auth';
-import { DiagnosisRecord, CropPlanRecord, SoilMetrics, AppLanguage } from './types';
+import {
+  DiagnosisRecord,
+  CropPlanRecord,
+  SoilMetrics,
+  AppLanguage,
+  DiseaseReport,
+  FarmProfile,
+} from './types';
+import {
+  DEFAULT_TEST_FARM,
+  INITIAL_DEMO_REPORTS,
+  calculateHaversineDistance,
+  DISEASE_ALERT_RADIUS_KM,
+} from './lib/geoUtils';
 
 export default function App() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -22,6 +43,8 @@ export default function App() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const [diagnoses, setDiagnoses] = useState<DiagnosisRecord[]>([]);
   const [cropPlans, setCropPlans] = useState<CropPlanRecord[]>([]);
+  const [diseaseReports, setDiseaseReports] = useState<DiseaseReport[]>(INITIAL_DEMO_REPORTS);
+  const [farmProfile, setFarmProfile] = useState<FarmProfile | null>(DEFAULT_TEST_FARM);
   const [currentSoilContext, setCurrentSoilContext] = useState<SoilMetrics | undefined>(undefined);
   const [currentDiseaseContext, setCurrentDiseaseContext] = useState<string | undefined>(undefined);
 
@@ -33,9 +56,27 @@ export default function App() {
     return () => unsubscribe();
   }, []);
 
-  // Subscribe to real-time Firestore database synchronization when user changes
+  // Subscribe to real-time global disease reports (surveillance stream)
+  useEffect(() => {
+    const unsubReports = subscribeToDiseaseReports((reports) => {
+      setDiseaseReports(reports);
+    });
+    return () => unsubReports();
+  }, []);
+
+  // Subscribe to user farm profile & digital diary synchronization
   useEffect(() => {
     if (!currentUser) {
+      // Check local storage for farm profile fallback
+      const savedLocal = localStorage.getItem('krishi_farm_profile_guest');
+      if (savedLocal) {
+        try {
+          setFarmProfile(JSON.parse(savedLocal));
+        } catch (_) {}
+      } else {
+        setFarmProfile(DEFAULT_TEST_FARM);
+      }
+
       // Seed default sample records for immediate farmer preview if not logged in
       setDiagnoses([
         {
@@ -86,11 +127,40 @@ export default function App() {
       setCropPlans(plans);
     });
 
+    const unsubFarm = subscribeToFarmProfile(currentUser.uid, (profile) => {
+      if (profile) {
+        setFarmProfile(profile);
+      }
+    });
+
     return () => {
       unsubDiagnoses();
       unsubPlans();
+      unsubFarm();
     };
   }, [currentUser]);
+
+  // Calculate nearby threats within 5 km of farmer's registered farm
+  const nearbyAlertsCount = useMemo(() => {
+    const activeFarmCoords = farmProfile || DEFAULT_TEST_FARM;
+    return diseaseReports.filter(report => {
+      if (typeof report.latitude !== 'number' || typeof report.longitude !== 'number') return false;
+      const distance = calculateHaversineDistance(
+        activeFarmCoords.latitude,
+        activeFarmCoords.longitude,
+        report.latitude,
+        report.longitude
+      );
+      return distance <= DISEASE_ALERT_RADIUS_KM;
+    }).length;
+  }, [diseaseReports, farmProfile]);
+
+  const handleUpdateFarmProfile = (newProfile: FarmProfile) => {
+    setFarmProfile(newProfile);
+    if (!currentUser) {
+      localStorage.setItem('krishi_farm_profile_guest', JSON.stringify(newProfile));
+    }
+  };
 
   const handleAskKisanAI = (crop: string, metrics: SoilMetrics) => {
     setCurrentSoilContext(metrics);
@@ -115,6 +185,7 @@ export default function App() {
         selectedDialect={selectedDialect}
         setSelectedDialect={setSelectedDialect}
         diagnosesCount={diagnoses.length}
+        nearbyAlertsCount={nearbyAlertsCount}
       />
 
       {/* Main Content Area */}
@@ -127,6 +198,8 @@ export default function App() {
               onNavigate={handleNavigate}
               onOpenAuth={() => setIsAuthModalOpen(true)}
               currentUser={currentUser}
+              farmProfile={farmProfile}
+              diseaseReports={diseaseReports}
             />
           </div>
         )}
@@ -140,11 +213,26 @@ export default function App() {
               selectedDialect={selectedDialect}
               setSelectedDialect={setSelectedDialect}
               onDiagnosisSaved={() => handleNavigate('vault')}
+              farmProfile={farmProfile}
             />
           </div>
         )}
 
-        {/* 3. Crop & Fertilizer Unified Hub */}
+        {/* 3. Disease Hotspot Map & 5 KM Radar */}
+        {activeTab === 'hotspot-map' && (
+          <div className="pt-4 pb-12">
+            <DiseaseHotspotMap
+              currentUser={currentUser}
+              farmProfile={farmProfile}
+              diseaseReports={diseaseReports}
+              onOpenAuth={() => setIsAuthModalOpen(true)}
+              onUpdateFarmProfile={handleUpdateFarmProfile}
+              onNavigateToScanner={() => handleNavigate('scanner')}
+            />
+          </div>
+        )}
+
+        {/* 4. Crop & Fertilizer Unified Hub */}
         {activeTab === 'crop-fertilizer' && (
           <div className="pt-4 pb-12">
             <CropAndFertilizerHub
@@ -156,7 +244,7 @@ export default function App() {
           </div>
         )}
 
-        {/* 4. Mandi & Weather Unified Hub */}
+        {/* 5. Mandi & Weather Unified Hub */}
         {activeTab === 'mandi-weather' && (
           <div className="pt-4 pb-12">
             <MandiAndWeatherHub
@@ -165,7 +253,7 @@ export default function App() {
           </div>
         )}
 
-        {/* 5. Kisan AI Voice & Chatbot */}
+        {/* 6. Kisan AI Voice & Chatbot */}
         {activeTab === 'chatbot' && (
           <div className="pt-4 pb-12">
             <FarmerChatBot
@@ -177,28 +265,28 @@ export default function App() {
           </div>
         )}
 
-        {/* 6. Farmer Chaupal (Peer Community) */}
+        {/* 7. Farmer Chaupal (Peer Community) */}
         {activeTab === 'community' && (
           <div className="pt-4 pb-12">
             <FarmerCommunity />
           </div>
         )}
 
-        {/* 7. Agri Advisory Blogs */}
+        {/* 8. Agri Advisory Blogs */}
         {activeTab === 'blogs' && (
           <div className="pt-4 pb-12">
             <AgriBlogs />
           </div>
         )}
 
-        {/* 8. Government Schemes & Subsidies */}
+        {/* 9. Government Schemes & Subsidies */}
         {activeTab === 'schemes' && (
           <div className="pt-4 pb-12">
             <FarmerSchemesAndHelp />
           </div>
         )}
 
-        {/* 9. Farm Vault (Digital Diary) */}
+        {/* 10. Farm Vault (Digital Diary) */}
         {activeTab === 'vault' && (
           <div className="pt-4 pb-12">
             <FarmRecordsVault
@@ -224,3 +312,4 @@ export default function App() {
     </div>
   );
 }
+

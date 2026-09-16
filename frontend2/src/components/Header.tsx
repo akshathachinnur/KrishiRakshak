@@ -27,6 +27,7 @@ interface HeaderProps {
   selectedDialect: AppLanguage;
   setSelectedDialect: (d: AppLanguage) => void;
   diagnosesCount: number;
+  nearbyAlertsCount?: number;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -37,6 +38,7 @@ export const Header: React.FC<HeaderProps> = ({
   selectedDialect,
   setSelectedDialect,
   diagnosesCount,
+  nearbyAlertsCount = 0,
 }) => {
   const { theme, toggleTheme } = useTheme();
   const { language, setLanguage, t, supportedLanguages } = useLanguage();
@@ -72,6 +74,12 @@ export const Header: React.FC<HeaderProps> = ({
       icon: '🌿',
     },
     {
+      id: 'hotspot-map',
+      label: selectedDialect === 'hi' ? 'रोग रडार' : selectedDialect === 'mr' ? 'रोग नकाशा' : 'Disease Map',
+      icon: '🗺️',
+      badge: nearbyAlertsCount > 0 ? nearbyAlertsCount : undefined,
+    },
+    {
       id: 'crop-fertilizer',
       label: selectedDialect === 'hi' ? 'फसल व खाद' : selectedDialect === 'mr' ? 'पीक व खत' : 'Crop & Fertilizer',
       icon: '🌱',
@@ -83,10 +91,11 @@ export const Header: React.FC<HeaderProps> = ({
     },
     {
       id: 'chatbot',
-      label: selectedDialect === 'hi' ? 'किसान साथी AI' : selectedDialect === 'mr' ? 'किसान AI' : 'Ask Kisan AI',
+      label: selectedDialect === 'hi' ? 'किसान AI' : selectedDialect === 'mr' ? 'किसान AI' : 'Ask Kisan AI',
       icon: '🎙️',
     },
   ];
+
 
   // Secondary Features in "More Services" Dropdown
   const moreServices = [
