@@ -16,11 +16,12 @@ import {
   Check
 } from 'lucide-react';
 import { PATHOLOGY_PRESETS } from '../lib/agronomyData';
-import { LeafPathology, AppLanguage, FarmProfile } from '../types';
+import { LeafPathology, AppLanguage, FarmProfile, DiagnosisRecord } from '../types';
 import { saveDiagnosisToCloud, saveDiseaseReportToCloud } from '../lib/firebase';
 import { DEFAULT_TEST_FARM } from '../lib/geoUtils';
 import { useLanguage } from '../context/LanguageContext';
 import { IPMRecommendation } from './IPMRecommendation';
+import { InfestationTrend } from './InfestationTrend';
 
 interface PathologyScannerProps {
   currentUser: any;
@@ -29,6 +30,8 @@ interface PathologyScannerProps {
   setSelectedDialect: (d: AppLanguage) => void;
   onDiagnosisSaved: () => void;
   farmProfile?: FarmProfile | null;
+  diagnosesHistory?: DiagnosisRecord[];
+  onRecordDiagnosis?: (record: DiagnosisRecord) => void;
 }
 
 
@@ -39,6 +42,8 @@ export const PathologyScanner: React.FC<PathologyScannerProps> = ({
   setSelectedDialect,
   onDiagnosisSaved,
   farmProfile,
+  diagnosesHistory = [],
+  onRecordDiagnosis,
 }) => {
 
   const { t } = useLanguage();
@@ -115,6 +120,25 @@ export const PathologyScanner: React.FC<PathologyScannerProps> = ({
             sampleImageUrl: base64,
           };
           setActivePathology(customPathology);
+
+          // Automatically record diagnosis in the persistent historical series
+          const newRecord: DiagnosisRecord = {
+            id: 'scan-' + Date.now(),
+            userId: currentUser?.uid || 'guest',
+            cropName: customPathology.cropName,
+            diseaseName: customPathology.diseaseName,
+            scientificName: customPathology.scientificName,
+            confidence: customPathology.confidence,
+            status: customPathology.badgeType,
+            description: customPathology.description,
+            organicTreatment: customPathology.organicTreatments[0] || '',
+            chemicalTreatment: customPathology.chemicalTreatments[0] || '',
+            imageUrl: customPathology.sampleImageUrl,
+            timestamp: Date.now(),
+            fieldName: farmProfile?.farmName ? `FIELD-001 - ${farmProfile.farmName}` : 'FIELD-001 - North Plot #2',
+            foliarLesionPercent: customPathology.foliarLesionPercent,
+          };
+          onRecordDiagnosis?.(newRecord);
         } catch (err: any) {
           console.error('Diagnosis API error:', err);
           // Show the real reason so a broken key or model is visible instead of silent.
@@ -197,7 +221,8 @@ export const PathologyScanner: React.FC<PathologyScannerProps> = ({
         organicTreatment: activePathology.organicTreatments[0] || '',
         chemicalTreatment: activePathology.chemicalTreatments[0] || '',
         imageUrl: customImage || activePathology.sampleImageUrl,
-        fieldName: 'Sector North - Plot 4',
+        fieldName: farmProfile?.farmName ? `${farmProfile.farmName} Plot` : 'Sector North - Plot 4',
+        foliarLesionPercent: activePathology.foliarLesionPercent,
       });
 
       // Broadcast to regional 5 km surveillance hotspot collection if disease detected
@@ -570,6 +595,17 @@ export const PathologyScanner: React.FC<PathologyScannerProps> = ({
           pathology={activePathology}
           farmProfile={farmProfile}
           selectedDialect={selectedDialect}
+        />
+
+        {/* 4. Infestation Trend Tracking Over Time */}
+        <InfestationTrend
+          currentPathology={activePathology}
+          diagnosesHistory={diagnosesHistory}
+          farmProfile={farmProfile}
+          onScanAgain={() => {
+            fileInputRef.current?.click();
+          }}
+          onRecordDiagnosis={onRecordDiagnosis}
         />
       </div>
 

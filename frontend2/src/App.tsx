@@ -16,6 +16,7 @@ import { Footer } from './components/Footer';
 import {
   auth,
   subscribeToDiagnoses,
+  saveDiagnosisToCloud,
   subscribeToCropPlans,
   subscribeToDiseaseReports,
   subscribeToFarmProfile,
@@ -78,24 +79,73 @@ export default function App() {
         setFarmProfile(DEFAULT_TEST_FARM);
       }
 
-      // Seed default sample records for immediate farmer preview if not logged in
-      setDiagnoses([
-        {
-          id: 'demo-1',
-          userId: 'demo',
-          cropName: 'Tomato (Solanum lycopersicum)',
-          diseaseName: 'Tomato Early Blight',
-          scientificName: 'Alternaria solani',
-          confidence: 98.4,
-          status: 'critical',
-          description: 'Concentric brown rings on lower foliage. High probability of plant defoliation.',
-          organicTreatment: 'Neem oil extract (Azadirachtin 10000 ppm) at 3ml/L.',
-          chemicalTreatment: 'Mancozeb 75% WP @ 2.0g per liter water.',
-          timestamp: Date.now() - 1000 * 60 * 60 * 3,
-          fieldName: 'North Plot #2',
-          imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBHA5hDg4kKTUoiO7YUBekluLFNURfuGvZ_Ik82Ww7PWcg4tZDXwD0xBw-fJzlqWz1yXulmd9X4_38FlcSQiBYtBcetxYUiuSlVr5KYHLHlq3DTmBALkFw_fCC_w5YYkBpBYxE-ySh7_sWauJ_Vc_ATD0T2__CNDZYemsWSI5KJbMDTzlgZdA502V8KzcUebmFtlYXLFWHYfOmKSY2X-rEm_t4IR6NL7z1nA1hI5AMVZ6eCk9gzQV5D'
+      // Check local storage for saved diagnoses or fallback to initial baseline
+      const savedDiagnoses = localStorage.getItem('krishi_diagnoses_history');
+      if (savedDiagnoses) {
+        try {
+          const parsed = JSON.parse(savedDiagnoses);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setDiagnoses(parsed);
+          } else {
+            setDiagnoses([
+              {
+                id: 'demo-1',
+                userId: 'demo',
+                cropName: 'Tomato (Solanum lycopersicum)',
+                diseaseName: 'Tomato Early Blight',
+                scientificName: 'Alternaria solani',
+                confidence: 98.4,
+                status: 'critical',
+                description: 'Concentric brown rings on lower foliage. High probability of plant defoliation.',
+                organicTreatment: 'Neem oil extract (Azadirachtin 10000 ppm) at 3ml/L.',
+                chemicalTreatment: 'Mancozeb 75% WP @ 2.0g per liter water.',
+                timestamp: Date.now() - 1000 * 60 * 60 * 24 * 2,
+                fieldName: 'FIELD-001 - North Plot #2',
+                imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBHA5hDg4kKTUoiO7YUBekluLFNURfuGvZ_Ik82Ww7PWcg4tZDXwD0xBw-fJzlqWz1yXulmd9X4_38FlcSQiBYtBcetxYUiuSlVr5KYHLHlq3DTmBALkFw_fCC_w5YYkBpBYxE-ySh7_sWauJ_Vc_ATD0T2__CNDZYemsWSI5KJbMDTzlgZdA502V8KzcUebmFtlYXLFWHYfOmKSY2X-rEm_t4IR6NL7z1nA1hI5AMVZ6eCk9gzQV5D',
+                foliarLesionPercent: 97.4
+              }
+            ]);
+          }
+        } catch (_) {
+          setDiagnoses([
+            {
+              id: 'demo-1',
+              userId: 'demo',
+              cropName: 'Tomato (Solanum lycopersicum)',
+              diseaseName: 'Tomato Early Blight',
+              scientificName: 'Alternaria solani',
+              confidence: 98.4,
+              status: 'critical',
+              description: 'Concentric brown rings on lower foliage. High probability of plant defoliation.',
+              organicTreatment: 'Neem oil extract (Azadirachtin 10000 ppm) at 3ml/L.',
+              chemicalTreatment: 'Mancozeb 75% WP @ 2.0g per liter water.',
+              timestamp: Date.now() - 1000 * 60 * 60 * 24 * 2,
+              fieldName: 'FIELD-001 - North Plot #2',
+              imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBHA5hDg4kKTUoiO7YUBekluLFNURfuGvZ_Ik82Ww7PWcg4tZDXwD0xBw-fJzlqWz1yXulmd9X4_38FlcSQiBYtBcetxYUiuSlVr5KYHLHlq3DTmBALkFw_fCC_w5YYkBpBYxE-ySh7_sWauJ_Vc_ATD0T2__CNDZYemsWSI5KJbMDTzlgZdA502V8KzcUebmFtlYXLFWHYfOmKSY2X-rEm_t4IR6NL7z1nA1hI5AMVZ6eCk9gzQV5D',
+              foliarLesionPercent: 97.4
+            }
+          ]);
         }
-      ]);
+      } else {
+        setDiagnoses([
+          {
+            id: 'demo-1',
+            userId: 'demo',
+            cropName: 'Tomato (Solanum lycopersicum)',
+            diseaseName: 'Tomato Early Blight',
+            scientificName: 'Alternaria solani',
+            confidence: 98.4,
+            status: 'critical',
+            description: 'Concentric brown rings on lower foliage. High probability of plant defoliation.',
+            organicTreatment: 'Neem oil extract (Azadirachtin 10000 ppm) at 3ml/L.',
+            chemicalTreatment: 'Mancozeb 75% WP @ 2.0g per liter water.',
+            timestamp: Date.now() - 1000 * 60 * 60 * 24 * 2,
+            fieldName: 'FIELD-001 - North Plot #2',
+            imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBHA5hDg4kKTUoiO7YUBekluLFNURfuGvZ_Ik82Ww7PWcg4tZDXwD0xBw-fJzlqWz1yXulmd9X4_38FlcSQiBYtBcetxYUiuSlVr5KYHLHlq3DTmBALkFw_fCC_w5YYkBpBYxE-ySh7_sWauJ_Vc_ATD0T2__CNDZYemsWSI5KJbMDTzlgZdA502V8KzcUebmFtlYXLFWHYfOmKSY2X-rEm_t4IR6NL7z1nA1hI5AMVZ6eCk9gzQV5D',
+            foliarLesionPercent: 97.4
+          }
+        ]);
+      }
       setCropPlans([
         {
           id: 'demo-plan-1',
@@ -170,6 +220,35 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleRecordDiagnosis = (record: DiagnosisRecord) => {
+    setDiagnoses((prev) => {
+      // Remove any record with identical id or identical timestamp
+      const filtered = prev.filter(r => r.id !== record.id && r.timestamp !== record.timestamp);
+      const updated = [record, ...filtered];
+      if (!currentUser) {
+        localStorage.setItem('krishi_diagnoses_history', JSON.stringify(updated));
+      }
+      return updated;
+    });
+
+    if (currentUser) {
+      saveDiagnosisToCloud(currentUser.uid, {
+        userId: currentUser.uid,
+        cropName: record.cropName,
+        diseaseName: record.diseaseName,
+        scientificName: record.scientificName,
+        confidence: record.confidence,
+        status: record.status,
+        description: record.description,
+        organicTreatment: record.organicTreatment,
+        chemicalTreatment: record.chemicalTreatment,
+        imageUrl: record.imageUrl,
+        fieldName: record.fieldName,
+        foliarLesionPercent: record.foliarLesionPercent,
+      }).catch((err) => console.warn('Cloud sync diagnosis error:', err));
+    }
+  };
+
   const handleNavigate = (tab: string) => {
     setActiveTab(tab);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -215,6 +294,8 @@ export default function App() {
               setSelectedDialect={setSelectedDialect}
               onDiagnosisSaved={() => handleNavigate('vault')}
               farmProfile={farmProfile}
+              diagnosesHistory={diagnoses}
+              onRecordDiagnosis={handleRecordDiagnosis}
             />
           </div>
         )}

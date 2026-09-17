@@ -129,6 +129,7 @@ export const subscribeToDiagnoses = (userId: string, callback: (records: Diagnos
         imageUrl: data.imageUrl,
         timestamp: data.clientTimestamp || (data.createdAt ? (data.createdAt as Timestamp).toMillis() : Date.now()),
         fieldName: data.fieldName || 'Main Field Sector A',
+        foliarLesionPercent: typeof data.foliarLesionPercent === 'number' ? data.foliarLesionPercent : (data.status === 'optimal' ? 0 : data.status === 'critical' ? 75 : 30),
       });
     });
     callback(list);

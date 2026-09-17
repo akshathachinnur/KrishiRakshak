@@ -38,6 +38,7 @@ export interface DiagnosisRecord {
   imageUrl?: string;
   timestamp: number;
   fieldName?: string;
+  foliarLesionPercent?: number;
 }
 
 export interface SoilMetrics {
