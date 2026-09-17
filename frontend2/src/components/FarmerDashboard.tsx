@@ -26,6 +26,7 @@ import {
 } from 'lucide-react';
 import { AppLanguage, DiseaseReport, FarmProfile } from '../types';
 import { calculateHaversineDistance, DISEASE_ALERT_RADIUS_KM, DEFAULT_TEST_FARM } from '../lib/geoUtils';
+import { txt } from '../lib/i18n';
 
 interface FarmerDashboardProps {
   selectedDialect: AppLanguage;
@@ -94,70 +95,71 @@ export const FarmerDashboard: React.FC<FarmerDashboardProps> = ({
   const greeting = getGreeting();
 
   // 6 PMFBY & Krishi Rakshak Portal Signature Action Cards (Dark Palette)
+  const d = selectedDialect;
   const actionCards = [
     {
       id: 'scanner',
-      title: selectedDialect === 'hi' ? 'पौधे का रोग पहचानें' : selectedDialect === 'mr' ? 'वनस्पतीवरील रोग ओळखा' : 'Check Plant Disease',
-      subtitle: selectedDialect === 'hi' ? 'फोटो खींचें • फसल नुकसान से पहले देसी व दवा उपचार पाएं' : selectedDialect === 'mr' ? 'फोटो काढा • पीक नुकसानीपूर्वी खात्रीशीर उपाय मिळवा' : 'Know your diagnosis & organic cure before crop loss',
+      title: txt(d, { hi: 'पौधे का रोग पहचानें', mr: 'वनस्पतीवरील रोग ओळखा', kn: 'ಸಸ್ಯ ರೋಗ ಪರೀಕ್ಷೆ', te: 'మొక్క వ్యాధి పరీక్ష', gu: 'છોડનો રોગ તપાસો', en: 'Check Plant Disease' }),
+      subtitle: txt(d, { hi: 'फोटो खींचें • फसल नुकसान से पहले देसी व दवा उपचार पाएं', mr: 'फोटो काढा • पीक नुकसानीपूर्वी खात्रीशीर उपाय मिळवा', kn: 'ಫೋಟೋ ತೆಗೆಯಿರಿ • ಬೆಳೆ ನಷ್ಟಕ್ಕೆ ಮುನ್ನ ಚಿಕಿತ್ಸೆ ಪಡೆಯಿರಿ', te: 'ఫోటో తీయండి • పంట నష్టానికి ముందే చికిత్స పొందండి', gu: 'ફોટો લો • પાકના નુકસાન પહેલાં ઉપાય મેળવો', en: 'Know your diagnosis & organic cure before crop loss' }),
       icon: Camera,
       badgeColor: 'bg-amber-950/70 text-amber-300 border-amber-600/50',
       iconColor: 'text-amber-300',
-      btnText: selectedDialect === 'hi' ? 'रोग जांचें' : 'Check Now',
+      btnText: txt(d, { hi: 'रोग जांचें', mr: 'रोग तपासा', kn: 'ರೋಗ ಪರೀಕ್ಷಿಸಿ', te: 'రోగం తనిఖీ', gu: 'રોગ તપાસો', en: 'Check Now' }),
       isSpecialBlue: false,
     },
     {
       id: 'crop-fertilizer-crop',
       targetTab: 'crop-fertilizer',
-      title: selectedDialect === 'hi' ? 'फसल की उपयुक्तता' : selectedDialect === 'mr' ? 'कोणते पीक घ्यावे?' : 'Best Crop to Sow',
-      subtitle: selectedDialect === 'hi' ? 'मिट्टी के प्रकार व मौसम अनुसार सर्वाधिक मुनाफे की फसल' : selectedDialect === 'mr' ? 'मातीनुसार सर्वाधिक नफा मिळवून देणारे पीक' : 'Know your soil texture & highest profit crop for season',
+      title: txt(d, { hi: 'फसल की उपयुक्तता', mr: 'कोणते पीक घ्यावे?', kn: 'ಯಾವ ಬೆಳೆ ಬೆಳೆಸಬೇಕು?', te: 'ఏ పంట వేయాలి?', gu: 'કયો પાક વાવવો?', en: 'Best Crop to Sow' }),
+      subtitle: txt(d, { hi: 'मिट्टी के प्रकार व मौसम अनुसार सर्वाधिक मुनाफे की फसल', mr: 'मातीनुसार सर्वाधिक नफा मिळवून देणारे पीक', kn: 'ಮಣ್ಣು ಮತ್ತು ಹವಾಮಾನಕ್ಕೆ ತಕ್ಕ ಹೆಚ್ಚು ಲಾಭದ ಬೆಳೆ', te: 'నేల, వాతావరణం ప్రకారం ఎక్కువ లాభం ఇచ్చే పంట', gu: 'જમીન અને હવામાન પ્રમાણે સૌથી વધુ નફાનો પાક', en: 'Know your soil texture & highest profit crop for season' }),
       icon: Sprout,
       badgeColor: 'bg-emerald-950/70 text-emerald-300 border-emerald-600/50',
       iconColor: 'text-emerald-300',
-      btnText: selectedDialect === 'hi' ? 'फसल चुनें' : 'Check Now',
+      btnText: txt(d, { hi: 'फसल चुनें', mr: 'पीक निवडा', kn: 'ಬೆಳೆ ಆಯ್ಕೆ', te: 'పంట ఎంచుకోండి', gu: 'પાક પસંદ કરો', en: 'Check Now' }),
       isSpecialBlue: false,
     },
     {
       id: 'schemes',
       targetTab: 'schemes',
-      title: 'Krishi Rakshak Portal & Helpline (KRPH)',
-      subtitle: selectedDialect === 'hi' ? 'फसल शिकायत दर्ज करें, बीमा क्लेम व कृषि सहायता पाएं' : selectedDialect === 'mr' ? 'पीक तक्रार नोंदवा व थेट मदत मिळवा' : 'Tell us about your Grievances & Report loss of Crop.',
+      title: txt(d, { hi: 'कृषि रक्षक पोर्टल व हेल्पलाइन (KRPH)', mr: 'कृषी रक्षक पोर्टल व हेल्पलाइन (KRPH)', kn: 'ಕೃಷಿ ರಕ್ಷಕ ಪೋರ್ಟಲ್ ಮತ್ತು ಹೆಲ್ಪ್‌ಲೈನ್ (KRPH)', te: 'కృషి రక్షక్ పోర్టల్ & హెల్ప్‌లైన్ (KRPH)', gu: 'કૃષિ રક્ષક પોર્ટલ અને હેલ્પલાઇન (KRPH)', en: 'Krishi Rakshak Portal & Helpline (KRPH)' }),
+      subtitle: txt(d, { hi: 'फसल शिकायत दर्ज करें, बीमा क्लेम व कृषि सहायता पाएं', mr: 'पीक तक्रार नोंदवा व थेट मदत मिळवा', kn: 'ಬೆಳೆ ದೂರು ನೋಂದಾಯಿಸಿ, ವಿಮೆ ಕ್ಲೈಮ್ ಮಾಡಿ', te: 'పంట ఫిర్యాదు నమోదు చేయండి, బీమా క్లెయిమ్ చేయండి', gu: 'પાકની ફરિયાદ નોંધો, વીમા ક્લેમ કરો', en: 'Tell us about your Grievances & Report loss of Crop.' }),
       icon: ShieldCheck,
       badgeColor: 'bg-purple-950/70 text-purple-300 border-purple-600/50',
       iconColor: 'text-purple-300',
-      btnText: selectedDialect === 'hi' ? 'सहायता देखें' : 'Explore Now',
+      btnText: txt(d, { hi: 'सहायता देखें', mr: 'मदत पहा', kn: 'ಸಹಾಯ ನೋಡಿ', te: 'సహాయం చూడండి', gu: 'સહાય જુઓ', en: 'Explore Now' }),
       isSpecialBlue: false,
     },
     {
       id: 'crop-fertilizer-fert',
       targetTab: 'crop-fertilizer',
-      title: selectedDialect === 'hi' ? 'खाद की सही खुराक' : selectedDialect === 'mr' ? 'खताची योग्य मात्रा' : 'Right Fertilizer Dose',
-      subtitle: selectedDialect === 'hi' ? 'यूरिया, डीएपी, एनपीके की वैज्ञानिक संतुलित मात्रा' : selectedDialect === 'mr' ? 'युरिया, डीएपी खतांचे अचूक प्रमाण' : 'Your Gateway to Smarter Farming & NPK Soil Health.',
+      title: txt(d, { hi: 'खाद की सही खुराक', mr: 'खताची योग्य मात्रा', kn: 'ಗೊಬ್ಬರದ ಸರಿಯಾದ ಪ್ರಮಾಣ', te: 'ఎరువు సరైన మోతాదు', gu: 'ખાતરની યોગ્ય માત્રા', en: 'Right Fertilizer Dose' }),
+      subtitle: txt(d, { hi: 'यूरिया, डीएपी, एनपीके की वैज्ञानिक संतुलित मात्रा', mr: 'युरिया, डीएपी खतांचे अचूक प्रमाण', kn: 'ಯೂರಿಯಾ, DAP, NPK ವೈಜ್ಞಾನಿಕ ಸಮತೋಲಿತ ಪ್ರಮಾಣ', te: 'యూరియా, DAP, NPK శాస్త్రీయ సమతుల మోతాదు', gu: 'યુરિયા, DAP, NPK વૈજ્ઞાનિક સંતુલિત માત્રા', en: 'Your Gateway to Smarter Farming & NPK Soil Health.' }),
       icon: FlaskConical,
       badgeColor: 'bg-rose-950/70 text-rose-300 border-rose-600/50',
       iconColor: 'text-rose-300',
-      btnText: selectedDialect === 'hi' ? 'मात्रा निकालें' : 'Calculate Now',
+      btnText: txt(d, { hi: 'मात्रा निकालें', mr: 'मात्रा काढा', kn: 'ಪ್ರಮಾಣ ಲೆಕ್ಕಿಸಿ', te: 'మోతాదు లెక్కించండి', gu: 'માત્રા ગણો', en: 'Calculate Now' }),
       isSpecialBlue: false,
     },
     {
       id: 'mandi-weather-mandi',
       targetTab: 'mandi-weather',
-      title: selectedDialect === 'hi' ? 'आज का मंडी भाव' : selectedDialect === 'mr' ? 'आजचे बाजार भाव' : 'Live Mandi Rates',
-      subtitle: selectedDialect === 'hi' ? 'देशभर की 500+ मंडियों के लाइव थोक एपीएमसी भाव' : selectedDialect === 'mr' ? 'थेट बाजार भाव व पीक निरीक्षण' : 'Live crop observations & APMC wholesale auction rates.',
+      title: txt(d, { hi: 'आज का मंडी भाव', mr: 'आजचे बाजार भाव', kn: 'ಇಂದಿನ ಮಾರುಕಟ್ಟೆ ಬೆಲೆ', te: 'ఈరోజు మార్కెట్ ధరలు', gu: 'આજના બજાર ભાવ', en: 'Live Mandi Rates' }),
+      subtitle: txt(d, { hi: 'देशभर की 500+ मंडियों के लाइव थोक एपीएमसी भाव', mr: 'थेट बाजार भाव व पीक निरीक्षण', kn: 'ದೇಶದ 500+ ಮಾರುಕಟ್ಟೆಗಳ ನೇರ APMC ಬೆಲೆಗಳು', te: 'దేశవ్యాప్తంగా 500+ మార్కెట్ల APMC ధరలు', gu: 'દેશભરના 500+ બજારોના APMC ભાવ', en: 'Live crop observations & APMC wholesale auction rates.' }),
       icon: Store,
       badgeColor: 'bg-pink-950/70 text-pink-300 border-pink-600/50',
       iconColor: 'text-pink-300',
-      btnText: selectedDialect === 'hi' ? 'भाव देखें' : 'Explore Now',
+      btnText: txt(d, { hi: 'भाव देखें', mr: 'भाव पहा', kn: 'ಬೆಲೆ ನೋಡಿ', te: 'ధరలు చూడండి', gu: 'ભાવ જુઓ', en: 'Explore Now' }),
       isSpecialBlue: false,
     },
     {
       id: 'mandi-weather-weather',
       targetTab: 'mandi-weather',
-      title: 'Weather & Radar (WINDS)',
-      subtitle: selectedDialect === 'hi' ? 'मौसम पूर्वानुमान, वर्षा रडार व स्प्रे करने की सही सलाह' : selectedDialect === 'mr' ? 'हवामान माहिती व फवारणी रडार' : "Know your Area's Weather Updates & spray window radar.",
+      title: txt(d, { hi: 'मौसम व रडार (WINDS)', mr: 'हवामान व रडार (WINDS)', kn: 'ಹವಾಮಾನ ಮತ್ತು ರಾಡಾರ್ (WINDS)', te: 'వాతావరణం & రాడార్ (WINDS)', gu: 'હવામાન અને રડાર (WINDS)', en: 'Weather & Radar (WINDS)' }),
+      subtitle: txt(d, { hi: 'मौसम पूर्वानुमान, वर्षा रडार व स्प्रे करने की सही सलाह', mr: 'हवामान माहिती व फवारणी रडार', kn: 'ಹವಾಮಾನ ಮುನ್ಸೂಚನೆ, ಮಳೆ ರಾಡಾರ್ ಮತ್ತು ಸ್ಪ್ರೇ ಸಲಹೆ', te: 'వాతావరణ సూచన, వర్షం రాడార్ మరియు స్ప్రే సలహా', gu: 'હવામાન આગાહી, વરસાદ રડાર અને છંટકાવ સલાહ', en: "Know your Area's Weather Updates & spray window radar." }),
       icon: Sun,
       badgeColor: 'bg-sky-950/70 text-sky-300 border-sky-600/50',
       iconColor: 'text-sky-300',
-      btnText: selectedDialect === 'hi' ? 'मौसम देखें' : 'Explore Now',
+      btnText: txt(d, { hi: 'मौसम देखें', mr: 'हवामान पहा', kn: 'ಹವಾಮಾನ ನೋಡಿ', te: 'వాతావరణం చూడండి', gu: 'હવામાન જુઓ', en: 'Explore Now' }),
       isSpecialBlue: true, // Dark Midnight Sapphire Card
     },
   ];
@@ -199,7 +201,7 @@ export const FarmerDashboard: React.FC<FarmerDashboardProps> = ({
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 text-emerald-100 text-xs font-bold backdrop-blur-md mb-2 border border-white/20">
                 <Sprout className="w-4 h-4 text-emerald-300" />
-                <span>{selectedDialect === 'hi' ? 'सरल व आसान किसान पोर्टल' : 'Simple & Farmer-Friendly Portal'}</span>
+                <span>{txt(d, { hi: 'सरल व आसान किसान पोर्टल', mr: 'सोपे व शेतकरी-स्नेही पोर्टल', kn: 'ಸರಳ ಮತ್ತು ರೈತ-ಸ್ನೇಹಿ ಪೋರ್ಟಲ್', te: 'సులభమైన రైతు-స్నేహ పోర్టల్', gu: 'સરળ અને ખેડૂત-મૈત્રીપૂર્ણ પોર્ટલ', en: 'Simple & Farmer-Friendly Portal' })}</span>
               </div>
               <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight drop-shadow-xs">
                 {greeting.title}
@@ -492,7 +494,7 @@ export const FarmerDashboard: React.FC<FarmerDashboardProps> = ({
                 onClick={() => onNavigate('schemes')}
                 className="text-xs font-bold text-[#18542c] dark:text-[#5bf06c] hover:underline flex items-center gap-1 cursor-pointer"
               >
-                <span>View all official notifications &amp; portals</span>
+                <span>{txt(d, { hi: 'सभी आधिकारिक सूचनाएं व पोर्टल देखें', mr: 'सर्व अधिकृत सूचना व पोर्टल पहा', kn: 'ಎಲ್ಲಾ ಅಧಿಕೃತ ಅಧಿಸೂಚನೆಗಳು ಮತ್ತು ಪೋರ್ಟಲ್ ನೋಡಿ', te: 'అన్ని అధికారిక నోటిఫికేషన్లు & పోర్టల్స్ చూడండి', gu: 'બધી સત્તાવાર સૂચનાઓ અને પોર્ટલ જુઓ', en: 'View all official notifications & portals' })}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </div>
@@ -505,7 +507,7 @@ export const FarmerDashboard: React.FC<FarmerDashboardProps> = ({
         <div className="bg-slate-50 dark:bg-[#121c16] rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-[#222c26]">
           <h3 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white mb-4 flex items-center gap-2">
             <span>🌾</span>
-            {selectedDialect === 'hi' ? 'अन्य उपयोगी सुविधाएं' : 'More Helpful Tools & Support'}
+            {txt(d, { hi: 'अन्य उपयोगी सुविधाएं', mr: 'अधिक उपयुक्त साधने', kn: 'ಇತರ ಉಪಯುಕ್ತ ಸಾಧನಗಳು', te: 'ఇతర ఉపయోగకరమైన సాధనాలు', gu: 'અન્ય ઉપયોગી સાધનો', en: 'More Helpful Tools & Support' })}
           </h3>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -519,10 +521,10 @@ export const FarmerDashboard: React.FC<FarmerDashboardProps> = ({
               </div>
               <div>
                 <span className="font-bold text-sm text-slate-900 dark:text-white block">
-                  {selectedDialect === 'hi' ? 'किसान चौपाल' : 'Farmer Forum'}
+                  {txt(d, { hi: 'किसान चौपाल', mr: 'शेतकरी मंच', kn: 'ರೈತ ಚರ್ಚಾವೇದಿಕೆ', te: 'రైతు వేదిక', gu: 'ખેડૂત મંચ', en: 'Farmer Forum' })}
                 </span>
                 <span className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 block">
-                  {selectedDialect === 'hi' ? 'किसान चर्चा व सवाल' : 'Peer Discussions'}
+                  {txt(d, { hi: 'किसान चर्चा व सवाल', mr: 'शेतकरी चर्चा व प्रश्न', kn: 'ರೈತರ ಚರ್ಚೆ ಮತ್ತು ಪ್ರಶ್ನೆ', te: 'రైతు చర్చ మరియు ప్రశ్నలు', gu: 'ખેડૂત ચર્ચા અને પ્રશ્નો', en: 'Peer Discussions' })}
                 </span>
               </div>
             </button>
@@ -537,10 +539,10 @@ export const FarmerDashboard: React.FC<FarmerDashboardProps> = ({
               </div>
               <div>
                 <span className="font-bold text-sm text-slate-900 dark:text-white block">
-                  {selectedDialect === 'hi' ? 'कृषि सलाह लेख' : 'Agri Guides'}
+                  {txt(d, { hi: 'कृषि सलाह लेख', mr: 'कृषी सल्ला लेख', kn: 'ಕೃಷಿ ಸಲಹೆ ಲೇಖನಗಳು', te: 'వ్యవసాయ సలహా వ్యాసాలు', gu: 'કૃષિ સલાહ લેખ', en: 'Agri Guides' })}
                 </span>
                 <span className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 block">
-                  {selectedDialect === 'hi' ? 'जैविक व देसी तरीके' : 'Farming Articles'}
+                  {txt(d, { hi: 'जैविक व देसी तरीके', mr: 'सेंद्रिय व देशी पद्धती', kn: 'ಸಾವಯವ ಮತ್ತು ದೇಸಿ ವಿಧಾನಗಳು', te: 'సేంద్రీయ మరియు దేశీ పద్ధతులు', gu: 'ઓર્ગેનિક અને દેશી પદ્ધતિઓ', en: 'Farming Articles' })}
                 </span>
               </div>
             </button>
@@ -555,7 +557,7 @@ export const FarmerDashboard: React.FC<FarmerDashboardProps> = ({
               </div>
               <div>
                 <span className="font-bold text-sm text-slate-900 dark:text-white block">
-                  {selectedDialect === 'hi' ? 'सरकारी योजनाएं' : 'Govt Schemes'}
+                  {txt(d, { hi: 'सरकारी योजनाएं', mr: 'सरकारी योजना', kn: 'ಸರ್ಕಾರಿ ಯೋಜನೆಗಳು', te: 'ప్రభుత్వ పథకాలు', gu: 'સરકારી યોજનાઓ', en: 'Govt Schemes' })}
                 </span>
                 <span className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 block">
                   PM-Kisan, KCC, Fasal Bima
@@ -573,10 +575,10 @@ export const FarmerDashboard: React.FC<FarmerDashboardProps> = ({
               </div>
               <div>
                 <span className="font-bold text-sm text-slate-900 dark:text-white block">
-                  {selectedDialect === 'hi' ? 'मेरी खेत डायरी' : 'Farm Vault'}
+                  {txt(d, { hi: 'मेरी खेत डायरी', mr: 'शेत डायरी', kn: 'ನನ್ನ ಹೊಲದ ಡೈರಿ', te: 'నా పొలం డైరీ', gu: 'મારી ખેત ડાયરી', en: 'Farm Vault' })}
                 </span>
                 <span className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 block">
-                  {selectedDialect === 'hi' ? 'पुराने रिकॉर्ड व पर्चे' : 'Saved Records'}
+                  {txt(d, { hi: 'पुराने रिकॉर्ड व पर्चे', mr: 'जुने रेकॉर्ड व पावत्या', kn: 'ಹಳೆಯ ದಾಖಲೆಗಳು ಮತ್ತು ರಶೀದಿ', te: 'పాత రికార్డులు మరియు రసీదులు', gu: 'જૂના રેકોર્ડ અને રસીદો', en: 'Saved Records' })}
                 </span>
               </div>
             </button>
@@ -596,13 +598,13 @@ export const FarmerDashboard: React.FC<FarmerDashboardProps> = ({
               <X className="w-3 h-3" />
             </button>
             <p className="text-xs font-bold leading-snug">
-              Hi, I am your <span className="text-[#5bf06c] font-black">Krishi Rakshak</span>. How may I help you?
+              {txt(d, { hi: 'नमस्ते! मैं आपका', mr: 'नमस्कार! मी तुमचा', kn: 'ನಮಸ್ಕಾರ! ನಾನು ನಿಮ್ಮ', te: 'నమస్కారం! నేను మీ', gu: 'નમસ્તે! હું તમારો', en: 'Hi, I am your' })} <span className="text-[#5bf06c] font-black">Krishi Rakshak</span>. {txt(d, { hi: 'कैसे मदद करूँ?', mr: 'कशी मदत करू?', kn: 'ಹೇಗೆ ಸಹಾಯ ಮಾಡಲಿ?', te: 'ఎలా సహాయం చేయాలి?', gu: 'કેવી રીતે મદદ કરું?', en: 'How may I help you?' })}
             </p>
             <button
               onClick={() => onNavigate('chatbot')}
               className="mt-2 text-[11px] font-extrabold text-[#5bf06c] hover:underline flex items-center gap-1 cursor-pointer"
             >
-              <span>Start Voice / Text Chat</span>
+              <span>{txt(d, { hi: 'आवाज / टेक्स्ट चैट शुरू करें', mr: 'आवाज / मजकूर चॅट सुरू करा', kn: 'ಧ್ವನಿ / ಪಠ್ಯ ಚಾಟ್ ಪ್ರಾರಂಭಿಸಿ', te: 'వాయిస్ / టెక్స్ట్ చాట్ ప్రారంభించండి', gu: 'વોઇસ / ટેક્સ્ટ ચેટ શરૂ કરો', en: 'Start Voice / Text Chat' })}</span>
               <ArrowRight className="w-3 h-3" />
             </button>
           </div>

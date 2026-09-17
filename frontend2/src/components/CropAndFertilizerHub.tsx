@@ -14,6 +14,8 @@ import { CropRecommendationML } from './CropRecommendationML';
 import { FertilizerAdvisor } from './FertilizerAdvisor';
 import { SoilMetrics, AppLanguage } from '../types';
 
+import { txt } from '../lib/i18n';
+
 interface CropAndFertilizerHubProps {
   currentUser: any;
   onOpenAuth: () => void;
@@ -47,7 +49,7 @@ export const CropAndFertilizerHub: React.FC<CropAndFertilizerHubProps> = ({
           >
             <Sprout className="w-4 h-4" />
             <span>
-              {selectedDialect === 'hi' ? '1. कौन सी फसल लगाएं?' : selectedDialect === 'mr' ? '1. कोणते पीक घ्यावे?' : '1. Which Crop to Grow?'}
+              {txt(selectedDialect, { hi: '1. कौन सी फसल लगाएं?', mr: '1. कोणते पीक घ्यावे?', kn: '1. ಯಾವ ಬೆಳೆ ಬೆಳೆಯಬೇಕು?', te: '1. ఏ పంట పండించాలి?', gu: '1. કયો પાક ઉગાડવો?', en: '1. Which Crop to Grow?' })}
             </span>
           </button>
 
@@ -62,7 +64,7 @@ export const CropAndFertilizerHub: React.FC<CropAndFertilizerHubProps> = ({
           >
             <FlaskConical className="w-4 h-4" />
             <span>
-              {selectedDialect === 'hi' ? '2. कितनी खाद डालें?' : selectedDialect === 'mr' ? '2. खताची योग्य मात्रा' : '2. Right Fertilizer Dose'}
+              {txt(selectedDialect, { hi: '2. कितनी खाद डालें?', mr: '2. खताची योग्य मात्रा', kn: '2. ಸರಿಯಾದ ರಸಗೊಬ್ಬರ ಪ್ರಮಾಣ', te: '2. సరైన ఎరువుల మోతాదు', gu: '2. યોગ્ય ખાતરનો ડોઝ', en: '2. Right Fertilizer Dose' })}
             </span>
           </button>
         </div>

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Header } from './components/Header';
 import { FarmerDashboard } from './components/FarmerDashboard';
 import { PathologyScanner } from './components/PathologyScanner';
+import { FarmMap } from './components/FarmMap';
 import { DiseaseHotspotMap } from './components/DiseaseHotspotMap';
 import { CropAndFertilizerHub } from './components/CropAndFertilizerHub';
 import { MandiAndWeatherHub } from './components/MandiAndWeatherHub';
@@ -204,7 +205,7 @@ export default function App() {
           </div>
         )}
 
-        {/* 2. Plant Doctor (Pathology Vision) */}
+        {/* 2. Plant Doctor (Pathology Vision) — PRIMARY CROP SCAN TAB */}
         {activeTab === 'scanner' && (
           <div className="pt-4 pb-12">
             <PathologyScanner
@@ -215,6 +216,13 @@ export default function App() {
               onDiagnosisSaved={() => handleNavigate('vault')}
               farmProfile={farmProfile}
             />
+          </div>
+        )}
+
+        {/* 2b. Interactive Farm Map */}
+        {activeTab === 'map' && (
+          <div className="pt-4 pb-12">
+            <FarmMap farmProfile={farmProfile} />
           </div>
         )}
 

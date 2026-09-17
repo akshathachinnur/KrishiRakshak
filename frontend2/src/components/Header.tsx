@@ -12,12 +12,16 @@ import {
   FolderLock,
   PhoneCall,
   Sparkles,
-  ShieldCheck
+  ShieldCheck,
+  MapPin,
+  Sprout,
+  Mic
 } from 'lucide-react';
 import { logOutUser } from '../lib/firebase';
 import { useTheme } from '../context/ThemeContext';
 import { useLanguage } from '../context/LanguageContext';
 import { AppLanguage } from '../types';
+import { txt } from '../lib/i18n';
 
 interface HeaderProps {
   activeTab: string;
@@ -61,38 +65,19 @@ export const Header: React.FC<HeaderProps> = ({
     setSelectedDialect(newLang);
   };
 
-  // Primary Tabs
+  // Primary Tabs — Crop Scan is the hero tab
+  const d = selectedDialect;
   const mainNavItems = [
     {
-      id: 'overview',
-      label: selectedDialect === 'hi' ? 'होम' : selectedDialect === 'mr' ? 'होम' : 'Home',
-      icon: '🏠',
-    },
-    {
       id: 'scanner',
-      label: selectedDialect === 'hi' ? 'पौधा डॉक्टर' : selectedDialect === 'mr' ? 'रोप डॉक्टर' : 'Plant Doctor',
+      label: txt(d, { hi: '🔬 फसल स्कैन', mr: '🔬 पीक स्कॅन', kn: '🔬 ಬೆಳೆ ಸ್ಕ್ಯಾನ್', te: '🔬 పంట స్క్యాన్', gu: '🔬 પાક સ્કૅન', en: '🔬 Crop Scan' }),
       icon: '🌿',
+      isPrimary: true,
     },
     {
-      id: 'hotspot-map',
-      label: selectedDialect === 'hi' ? 'रोग रडार' : selectedDialect === 'mr' ? 'रोग नकाशा' : 'Disease Map',
-      icon: '🗺️',
-      badge: nearbyAlertsCount > 0 ? nearbyAlertsCount : undefined,
-    },
-    {
-      id: 'crop-fertilizer',
-      label: selectedDialect === 'hi' ? 'फसल व खाद' : selectedDialect === 'mr' ? 'पीक व खत' : 'Crop & Fertilizer',
-      icon: '🌱',
-    },
-    {
-      id: 'mandi-weather',
-      label: selectedDialect === 'hi' ? 'मंडी व मौसम' : selectedDialect === 'mr' ? 'बाजार व हवामान' : 'Mandi & Weather',
-      icon: '💰',
-    },
-    {
-      id: 'chatbot',
-      label: selectedDialect === 'hi' ? 'किसान AI' : selectedDialect === 'mr' ? 'किसान AI' : 'Ask Kisan AI',
-      icon: '🎙️',
+      id: 'map',
+      label: txt(d, { hi: 'नक्शा', mr: 'नकाशा', kn: 'ನಕ್ಷೆ', te: 'మ్యాప్', gu: 'નકશો', en: 'Map' }),
+      icon: '📍',
     },
   ];
 
@@ -100,27 +85,58 @@ export const Header: React.FC<HeaderProps> = ({
   // Secondary Features in "More Services" Dropdown
   const moreServices = [
     {
+      id: 'overview',
+      label: txt(d, { hi: 'होम', mr: 'होम', kn: 'ಮುಖಪುಟ', te: 'హోమ్', gu: 'હોમ', en: 'Home' }),
+      sub: txt(d, { hi: 'डैशबोर्ड', mr: 'डॅशबोर्ड', kn: 'ಡ್ಯಾಶ್ಬೋರ್ಡ್', te: 'డాష్‌బోర్డ్', gu: 'ડેશબોર્ડ', en: 'Dashboard' }),
+      icon: Sprout,
+    },
+    {
+      id: 'hotspot-map',
+      label: txt(d, { hi: 'रोग रडार', mr: 'रोग नकाशा', kn: 'ರೋಗ ನಕ್ಷೆ', te: 'వ్యాధి మ్యాప్', gu: 'રોગ નકશો', en: 'Disease Map' }),
+      sub: txt(d, { hi: 'आसपास के रोग', mr: 'आजबाजूचे आजार', kn: 'ಹತ್ತಿರದ ರೋಗಗಳು', te: 'సమీప వ్యాధులు', gu: 'નજીકના રોગો', en: 'Nearby Alerts' }),
+      icon: MapPin,
+      badge: nearbyAlertsCount > 0 ? nearbyAlertsCount : undefined,
+    },
+    {
+      id: 'mandi-weather',
+      label: txt(d, { hi: 'मंडी व मौसम', mr: 'बाजार व हवामान', kn: 'ಮಾರುಕಟ್ಟೆ ಮತ್ತು ಹವಾಮಾನ', te: 'మార్కెట్ & వాతావరణం', gu: 'બજાર અને હવામાન', en: 'Mandi & Weather' }),
+      sub: txt(d, { hi: 'बाजार भाव और मौसम', mr: 'बाजार भाव आणि हवामान', kn: 'ಮಾರುಕಟ್ಟೆ ಬೆಲೆಗಳು ಮತ್ತು ಹವಾಮಾನ', te: 'మార్కెట్ ధరలు & వాతావరణం', gu: 'બજાર ભાવ અને હવામાન', en: 'Market & Weather' }),
+      icon: Sun,
+    },
+    {
+      id: 'crop-fertilizer',
+      label: txt(d, { hi: 'फसल व खाद', mr: 'पीक व खत', kn: 'ಬೆಳೆ ಮತ್ತು ಗೊಬ್ಬರ', te: 'పంట & ఎరువు', gu: 'પાક અને ખાતર', en: 'Crop & Fertilizer' }),
+      sub: txt(d, { hi: 'फसल अनुशंसा व खाद योजना', mr: 'पीक शिफारस व खत योजना', kn: 'ಬೆಳೆ ಶಿಫಾರಸು ಮತ್ತು ಗೊಬ್ಬರ ಯೋಜನೆ', te: 'పంట సిఫారసు & ఎరువు ప్రణాళిక', gu: 'પાક સિફારસ અને ખાતર યોજના', en: 'Crop Recommendation & Fertilizer Plan' }),
+      icon: Sprout,
+    },
+    {
+      id: 'chatbot',
+      label: txt(d, { hi: 'किसान AI', mr: 'किसान AI', kn: 'ಕಿಸಾನ್ AI', te: 'కిసాన్ AI', gu: 'કિસાન AI', en: 'Ask Kisan AI' }),
+      sub: txt(d, { hi: 'AI से पूछें कोई भी सवाल', mr: 'AI ला विचारा कोणताही प्रश्न', kn: 'AI ಗೆ ಯಾವುದೇ ಪ್ರಶ್ನೆ ಕೇಳಿ', te: 'AI ను ఏదైనా అడగండి', gu: 'AI ને કોઈપણ પ્રશ્ન પૂછો', en: 'Voice & Chat AI Assistant' }),
+      icon: Mic,
+    },
+    {
       id: 'community',
-      label: selectedDialect === 'hi' ? 'किसान चौपाल' : selectedDialect === 'mr' ? 'शेतकरी मंच' : 'Farmer Forum',
-      sub: selectedDialect === 'hi' ? 'किसान चर्चा व सवाल' : 'Peer Discussion',
+      label: txt(d, { hi: 'किसान चौपाल', mr: 'शेतकरी मंच', kn: 'ರೈತ ಚರ್ಚಾವೇದಿಕೆ', te: 'రైతు వేదిక', gu: 'ખેડૂત મંચ', en: 'Farmer Forum' }),
+      sub: txt(d, { hi: 'किसान चर्चा व सवाल', mr: 'शेतकरी चर्चा', kn: 'ರೈತರ ಚರ್ಚೆ', te: 'రైతు చర్చ', gu: 'ખેડૂત ચર્ચા', en: 'Peer Discussion' }),
       icon: Users,
     },
     {
       id: 'blogs',
-      label: selectedDialect === 'hi' ? 'कृषि सलाह लेख' : selectedDialect === 'mr' ? 'कृषी लेख' : 'Agri Blogs',
-      sub: selectedDialect === 'hi' ? 'देसी तरीके व उपाय' : 'Field Knowledge',
+      label: txt(d, { hi: 'कृषि सलाह लेख', mr: 'कृषी लेख', kn: 'ಕೃಷಿ ಲೇಖನಗಳು', te: 'వ్యవసాయ వ్యాసాలు', gu: 'કૃષિ લેખ', en: 'Agri Blogs' }),
+      sub: txt(d, { hi: 'देसी तरीके व उपाय', mr: 'देशी पद्धती व उपाय', kn: 'ದೇಸಿ ವಿಧಾನ ಮತ್ತು ಉಪಾಯ', te: 'దేశీ పద్ధతులు మరియు ఉపాయాలు', gu: 'દેસી રીત અને ઉપાય', en: 'Field Knowledge' }),
       icon: BookOpen,
     },
     {
       id: 'schemes',
-      label: selectedDialect === 'hi' ? 'सरकारी योजनाएं' : selectedDialect === 'mr' ? 'सरकारी योजना' : 'Govt Schemes',
+      label: txt(d, { hi: 'सरकारी योजनाएं', mr: 'सरकारी योजना', kn: 'ಸರ್ಕಾರಿ ಯೋಜನೆಗಳು', te: 'ప్రభుత్వ పథకాలు', gu: 'સરકારી યોજનાઓ', en: 'Govt Schemes' }),
       sub: 'PM-Kisan, KCC, Fasal Bima',
       icon: Landmark,
     },
     {
       id: 'vault',
-      label: selectedDialect === 'hi' ? 'मेरी खेत डायरी' : selectedDialect === 'mr' ? 'शेत डायरी' : 'Farm Vault',
-      sub: selectedDialect === 'hi' ? 'पुराने रिकॉर्ड व पर्चे' : 'Saved Records',
+      label: txt(d, { hi: 'मेरी खेत डायरी', mr: 'शेत डायरी', kn: 'ನನ್ನ ಹೊಲದ ಡೈರಿ', te: 'నా పొలం డైరీ', gu: 'મારી ખેત ડાયરી', en: 'Farm Vault' }),
+      sub: txt(d, { hi: 'पुराने रिकॉर्ड व पर्चे', mr: 'जुने रेकॉर्ड', kn: 'ಹಳೆಯ ದಾಖಲೆಗಳು', te: 'పాత రికార్డులు', gu: 'જૂના રેકોર્ડ', en: 'Saved Records' }),
       icon: FolderLock,
       badge: diagnosesCount > 0 ? diagnosesCount : undefined,
     },
@@ -295,12 +311,17 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="flex items-center gap-1 sm:gap-2 overflow-x-auto no-scrollbar py-1">
             {mainNavItems.map((item) => {
               const isActive = activeTab === item.id;
+              const isPrimary = (item as any).isPrimary;
               return (
                 <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
                   className={`text-xs sm:text-sm font-bold transition-all px-3 py-1.5 rounded-lg flex items-center gap-1.5 shrink-0 cursor-pointer ${
-                    isActive
+                    isPrimary && !isActive
+                      ? 'bg-[#fbc02d] text-[#134e27] font-black shadow-md hover:bg-[#f9a825] ring-1 ring-amber-400/40'
+                      : isPrimary && isActive
+                      ? 'bg-[#f57f17] text-white font-black shadow-lg ring-2 ring-amber-300/60'
+                      : isActive
                       ? 'bg-[#163b22] text-[#5bf06c] shadow-inner font-black ring-1 ring-[#39d353]/40'
                       : 'text-emerald-100/75 hover:text-white hover:bg-[#122718]'
                   }`}
@@ -323,7 +344,7 @@ export const Header: React.FC<HeaderProps> = ({
                 }`}
               >
                 <Sparkles className="w-3.5 h-3.5 text-yellow-300" />
-                <span>{selectedDialect === 'hi' ? 'अन्य सेवाएं' : selectedDialect === 'mr' ? 'अधिक सेवा' : 'More Tools'}</span>
+                <span>{txt(d, { hi: 'अन्य सेवाएं', mr: 'अधिक सेवा', kn: 'ಇತರ ಸೇವೆಗಳು', te: 'ఇతర సేవలు', gu: 'અન્ય સેવાઓ', en: 'More Tools' })}</span>
                 <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isMoreOpen ? 'rotate-180' : ''}`} />
               </button>
 
@@ -407,7 +428,7 @@ export const Header: React.FC<HeaderProps> = ({
         >
           <span className="text-sm leading-none">✨</span>
           <span className="text-[10px] font-bold">
-            {selectedDialect === 'hi' ? 'अन्य' : 'More'}
+            {txt(d, { hi: 'अन्य', mr: 'अधिक', kn: 'ಇತರ', te: 'ఇతర', gu: 'વધુ', en: 'More' })}
           </span>
         </button>
       </div>
