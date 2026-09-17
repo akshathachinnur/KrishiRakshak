@@ -205,4 +205,82 @@ export interface FarmProfile {
   updatedAt: number;
 }
 
+// ==========================================
+// Integrated Pest Management (IPM) Protocols
+// ==========================================
+
+export type CropGrowthStage = 
+  | 'seedling' 
+  | 'vegetative' 
+  | 'flowering' 
+  | 'fruiting_bulbing' 
+  | 'maturity_harvest';
+
+export interface IPMChemicalProtocol {
+  isValidated: boolean;
+  validationStatus: 'validated' | 'validation_required' | 'unavailable';
+  productName: string;
+  activeIngredient: string;
+  concentration: string;
+  crop: string;
+  targetPest: string;
+  dosage: string;
+  sprayVolume: string;
+  phiDays: string; // Pre-Harvest Interval (waiting period)
+  reiHours?: string; // Restricted Entry Interval
+  ppeRequirements: string[];
+  fracIracGroup?: string; // FRAC for fungicides, IRAC for insecticides
+  maxApplications?: string;
+  labelStatus: string;
+  labelSource: string;
+  validationNotes?: string;
+}
+
+export interface IPMSafetyGuidelines {
+  ppeList: string[];
+  contactInhalationPrecaution: string;
+  childAnimalSafety: string;
+  waterProtection: string;
+  pollinatorProtection: string;
+  followLabelStatement: string;
+  safeDisposal: string;
+}
+
+export interface IPMRegulatoryCheck {
+  isValidated: boolean;
+  badgeStatus: '✓ Label Validated' | '⚠ Label Validation Required';
+  regulatoryBody: string;
+  complianceMessage: string;
+}
+
+export interface IPMExpertReferral {
+  recommended: boolean;
+  reasons: string[];
+  message: string;
+  helplineNumber: string;
+  helplineLabel: string;
+}
+
+export interface IPMRecommendationData {
+  cropName: string;
+  diseaseOrPest: string;
+  scientificName: string;
+  confidence: number;
+  severity: 'optimal' | 'low' | 'medium' | 'high' | 'critical';
+  growthStage: CropGrowthStage;
+  location: string;
+  isConfidenceLow: boolean;
+  uncertaintyWarning?: string;
+  
+  culturalControls: string[];
+  mechanicalControls: string[];
+  biologicalControls: string[];
+  chemicalControl: IPMChemicalProtocol;
+  
+  safetyGuidelines: IPMSafetyGuidelines;
+  regulatoryCheck: IPMRegulatoryCheck;
+  expertReferral: IPMExpertReferral;
+}
+
+
 

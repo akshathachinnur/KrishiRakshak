@@ -20,6 +20,7 @@ import { LeafPathology, AppLanguage, FarmProfile } from '../types';
 import { saveDiagnosisToCloud, saveDiseaseReportToCloud } from '../lib/firebase';
 import { DEFAULT_TEST_FARM } from '../lib/geoUtils';
 import { useLanguage } from '../context/LanguageContext';
+import { IPMRecommendation } from './IPMRecommendation';
 
 interface PathologyScannerProps {
   currentUser: any;
@@ -563,6 +564,13 @@ export const PathologyScanner: React.FC<PathologyScannerProps> = ({
             </div>
           </div>
         </div>
+
+        {/* 3. Integrated Pest Management (IPM) Structured Advisory Framework */}
+        <IPMRecommendation
+          pathology={activePathology}
+          farmProfile={farmProfile}
+          selectedDialect={selectedDialect}
+        />
       </div>
 
       {/* Export Report Modal */}
