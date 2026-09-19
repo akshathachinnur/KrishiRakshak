@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { ChatMessage, SoilMetrics, AppLanguage } from '../types';
 import { useLanguage } from '../context/LanguageContext';
+import { playVernacularSpeech, stopVernacularSpeech } from '../lib/speechUtils';
 
 interface FarmerChatBotProps {
   selectedDialect?: AppLanguage;
@@ -228,24 +229,20 @@ export const FarmerChatBot: React.FC<FarmerChatBotProps> = ({
   };
 
   const handleSpeakMessage = (text: string) => {
-    if (!('speechSynthesis' in window)) return;
-    
     if (isSpeaking) {
-      window.speechSynthesis.cancel();
+      stopVernacularSpeech();
       setIsSpeaking(false);
       return;
     }
 
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = SPEECH_LANG_MAP[botLanguage] || 'hi-IN';
-    utterance.rate = 0.95;
-    
-    utterance.onend = () => setIsSpeaking(false);
-    utterance.onerror = () => setIsSpeaking(false);
+    if (!text || !text.trim()) return;
 
     setIsSpeaking(true);
-    window.speechSynthesis.speak(utterance);
+    playVernacularSpeech(text, botLanguage, {
+      onStart: () => setIsSpeaking(true),
+      onEnd: () => setIsSpeaking(false),
+      onError: () => setIsSpeaking(false),
+    });
   };
 
   const handleToggleVoiceInput = () => {

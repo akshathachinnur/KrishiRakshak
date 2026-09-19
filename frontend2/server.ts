@@ -67,6 +67,42 @@ app.get('/api/health', (req: Request, res: Response) => {
   });
 });
 
+// 1b. High-Quality Multilingual TTS Audio Stream Proxy (Hindi, Marathi, Telugu, Kannada, Gujarati, English)
+app.get('/api/tts', async (req: Request, res: Response) => {
+  try {
+    const text = String(req.query.text || '').trim();
+    const lang = String(req.query.lang || 'en').trim();
+    if (!text) {
+      return res.status(400).send('No text provided');
+    }
+
+    const cleanText = text.slice(0, 200);
+    const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(cleanText)}&tl=${encodeURIComponent(lang)}&client=tw-ob`;
+
+    const response = await fetch(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Referer': 'https://translate.google.com/',
+      }
+    });
+
+    if (!response.ok) {
+      return res.status(response.status).send('TTS upstream error');
+    }
+
+    const arrayBuffer = await response.arrayBuffer();
+    res.set({
+      'Content-Type': 'audio/mpeg',
+      'Content-Length': arrayBuffer.byteLength.toString(),
+      'Cache-Control': 'public, max-age=86400',
+    });
+    res.send(Buffer.from(arrayBuffer));
+  } catch (err: any) {
+    console.error('TTS Endpoint Error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // 2. Crop Recommendation ML Endpoint (Matching KrishiRakshak /predict_crop)
 app.post('/api/predict_crop', (req: Request, res: Response) => {
   try {

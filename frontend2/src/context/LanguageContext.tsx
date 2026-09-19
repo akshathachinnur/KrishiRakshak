@@ -2,8 +2,8 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { AppLanguage, LanguageMeta } from '../types';
 
 export const SUPPORTED_LANGUAGES: LanguageMeta[] = [
-  { code: 'hi', name: 'हिन्दी', englishName: 'Hindi', speechCode: 'hi-IN' },
   { code: 'en', name: 'English', englishName: 'English', speechCode: 'en-US' },
+  { code: 'hi', name: 'हिन्दी', englishName: 'Hindi', speechCode: 'hi-IN' },
   { code: 'mr', name: 'मराठी', englishName: 'Marathi', speechCode: 'mr-IN' },
   { code: 'kn', name: 'ಕನ್ನಡ', englishName: 'Kannada', speechCode: 'kn-IN' },
   { code: 'te', name: 'తెలుగు', englishName: 'Telugu', speechCode: 'te-IN' },
@@ -1639,7 +1639,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     } catch {
       // storage unavailable
     }
-    return 'hi'; // Default to Hindi as per farmer accessibility
+    return 'en'; // Default to English
   });
 
   const setLanguage = (lang: AppLanguage) => {

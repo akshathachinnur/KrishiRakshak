@@ -389,13 +389,32 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           </div>
 
-          {/* Right Signature Golden-Yellow Action Button (Matches "Register" in reference) */}
+          {/* Right Action Buttons: Home (visible on other tabs) & Check Plant */}
           <div className="flex items-center gap-2 shrink-0 ml-2">
+            {activeTab !== 'overview' && (
+              <button
+                type="button"
+                onClick={() => setActiveTab('overview')}
+                className="h-8 sm:h-9 px-3 sm:px-4 rounded-lg font-bold text-xs sm:text-sm flex items-center gap-1.5 transition-all cursor-pointer transform active:scale-95 whitespace-nowrap bg-[#122718] hover:bg-[#183d24] text-emerald-100 hover:text-white border border-emerald-600/30"
+                title={t.nav.homeBtn || 'Home'}
+              >
+                <span>🏠</span>
+                <span>{t.nav.homeBtn || 'Home'}</span>
+              </button>
+            )}
+
             <button
-              onClick={() => setActiveTab(activeTab === 'scanner' ? 'overview' : 'scanner')}
-              className="h-8 sm:h-9 px-3.5 sm:px-5 rounded-lg bg-[#fbc02d] hover:bg-[#f9a825] active:bg-[#f57f17] text-[#134e27] font-black text-xs sm:text-sm flex items-center gap-1.5 shadow-md hover:shadow-lg transition-all cursor-pointer transform active:scale-95 whitespace-nowrap"
+              type="button"
+              onClick={() => setActiveTab('scanner')}
+              className={`h-8 sm:h-9 px-3.5 sm:px-5 rounded-lg font-black text-xs sm:text-sm flex items-center gap-1.5 shadow-md hover:shadow-lg transition-all cursor-pointer transform active:scale-95 whitespace-nowrap ${
+                activeTab === 'scanner'
+                  ? 'bg-[#f57f17] text-white shadow-lg ring-2 ring-amber-300/60'
+                  : 'bg-[#fbc02d] hover:bg-[#f9a825] active:bg-[#f57f17] text-[#134e27]'
+              }`}
+              title={t.nav.checkLeaf || 'Check Plant'}
             >
-              <span>{activeTab === 'scanner' ? '🏠 ' + t.nav.homeBtn : '🔍 ' + t.nav.checkLeaf}</span>
+              <span>🔍</span>
+              <span>{t.nav.checkLeaf || 'Check Plant'}</span>
             </button>
           </div>
         </div>
@@ -403,6 +422,16 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* Mobile Navigation Bar */}
       <div className="lg:hidden flex items-center justify-around gap-1 px-2 py-1.5 bg-[#0a180f] text-white border-t border-[#142e1d] shadow-sm">
+        {activeTab !== 'overview' && (
+          <button
+            type="button"
+            onClick={() => setActiveTab('overview')}
+            className="text-xs px-2 py-1 rounded-lg whitespace-nowrap transition-colors flex flex-col items-center gap-0.5 shrink-0 text-emerald-100 hover:text-white"
+          >
+            <span className="text-sm leading-none">🏠</span>
+            <span className="text-[10px] font-bold">{t.nav.homeBtn || 'Home'}</span>
+          </button>
+        )}
         {mainNavItems.map((item) => (
           <button
             key={item.id}

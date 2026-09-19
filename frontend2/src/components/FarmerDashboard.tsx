@@ -15,8 +15,6 @@ import {
   Sparkles,
   ShieldCheck,
   ChevronRight,
-  Pause,
-  Play,
   X,
   Bot,
   MapPin,
@@ -47,7 +45,6 @@ export const FarmerDashboard: React.FC<FarmerDashboardProps> = ({
 }) => {
 
   const [activeDot, setActiveDot] = useState(2);
-  const [isPaused, setIsPaused] = useState(false);
   const [showRakshakBubble, setShowRakshakBubble] = useState(true);
 
   // Bilingual greetings and labels tailored for farmers
@@ -381,13 +378,13 @@ export const FarmerDashboard: React.FC<FarmerDashboardProps> = ({
             })}
           </div>
 
-          {/* Slider Pagination Controls (Matching Reference: ○ ○ ● ○ ○ [Pause]) */}
+          {/* Slider Pagination Controls */}
           <div className="flex items-center justify-center gap-2.5 pt-2">
             {[0, 1, 2, 3, 4].map((idx) => (
               <button
                 key={idx}
                 onClick={() => setActiveDot(idx)}
-                className={`transition-all ${
+                className={`transition-all cursor-pointer ${
                   activeDot === idx
                     ? 'w-6 h-3 rounded-full bg-[#1b5e20] border-2 border-white'
                     : 'w-3 h-3 rounded-full bg-white/40 hover:bg-white/80'
@@ -395,13 +392,6 @@ export const FarmerDashboard: React.FC<FarmerDashboardProps> = ({
                 aria-label={`Slide ${idx + 1}`}
               />
             ))}
-            <button
-              onClick={() => setIsPaused(!isPaused)}
-              className="ml-2 px-2.5 py-0.5 rounded-full bg-white/20 hover:bg-white/30 text-white text-[11px] font-bold flex items-center gap-1 border border-white/20"
-            >
-              {isPaused ? <Play className="w-3 h-3" /> : <Pause className="w-3 h-3" />}
-              <span>{isPaused ? 'Play' : 'Pause'}</span>
-            </button>
           </div>
         </div>
       </section>

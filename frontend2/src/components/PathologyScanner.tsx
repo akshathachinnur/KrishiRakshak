@@ -22,6 +22,7 @@ import { DEFAULT_TEST_FARM } from '../lib/geoUtils';
 import { useLanguage } from '../context/LanguageContext';
 import { IPMRecommendation } from './IPMRecommendation';
 import { InfestationTrend } from './InfestationTrend';
+import { playVernacularSpeech, stopVernacularSpeech } from '../lib/speechUtils';
 
 interface PathologyScannerProps {
   currentUser: any;
@@ -168,37 +169,21 @@ export const PathologyScanner: React.FC<PathologyScannerProps> = ({
 
   // Voice speech synthesis in Vernacular Language
   const handlePlayVoiceAdvisory = () => {
-    if (!('speechSynthesis' in window)) {
-      alert('Speech synthesis not supported on this browser.');
-      return;
-    }
-
     if (isAudioPlaying) {
-      window.speechSynthesis.cancel();
+      stopVernacularSpeech();
       setIsAudioPlaying(false);
       return;
     }
 
     const textToSpeak = activePathology.audioAdvisories[selectedDialect] || activePathology.audioAdvisories.en;
-    const utterance = new SpeechSynthesisUtterance(textToSpeak);
+    if (!textToSpeak) return;
 
-    // Map dialect codes
-    const langMap: Record<AppLanguage, string> = {
-      en: 'en-US',
-      hi: 'hi-IN',
-      mr: 'mr-IN',
-      kn: 'kn-IN',
-      te: 'te-IN',
-      gu: 'gu-IN'
-    };
-    utterance.lang = langMap[selectedDialect] || 'en-US';
-    utterance.rate = 0.95;
-
-    utterance.onstart = () => setIsAudioPlaying(true);
-    utterance.onend = () => setIsAudioPlaying(false);
-    utterance.onerror = () => setIsAudioPlaying(false);
-
-    window.speechSynthesis.speak(utterance);
+    setIsAudioPlaying(true);
+    playVernacularSpeech(textToSpeak, selectedDialect, {
+      onStart: () => setIsAudioPlaying(true),
+      onEnd: () => setIsAudioPlaying(false),
+      onError: () => setIsAudioPlaying(false),
+    });
   };
 
   // Save to Firebase Firestore

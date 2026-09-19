@@ -31,6 +31,7 @@ import {
   DiseaseReport,
   FarmProfile,
 } from './types';
+import { useLanguage } from './context/LanguageContext';
 import {
   DEFAULT_TEST_FARM,
   INITIAL_DEMO_REPORTS,
@@ -39,9 +40,9 @@ import {
 } from './lib/geoUtils';
 
 export default function App() {
+  const { language: selectedDialect, setLanguage: setSelectedDialect } = useLanguage();
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [activeTab, setActiveTab] = useState<string>('overview');
-  const [selectedDialect, setSelectedDialect] = useState<AppLanguage>('hi');
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const [diagnoses, setDiagnoses] = useState<DiagnosisRecord[]>([]);
   const [cropPlans, setCropPlans] = useState<CropPlanRecord[]>([]);
